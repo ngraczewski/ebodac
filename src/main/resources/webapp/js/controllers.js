@@ -20,6 +20,19 @@
 
     /*
      *
+     * Basic
+     *
+     */
+    controllers.controller('EbodacBasicCtrl', function ($scope) {
+        innerLayout({
+            spacing_closed: 30,
+            east__minSize: 200,
+            east__maxSize: 350
+        });
+    });
+
+    /*
+     *
      * Messages
      *
      */
@@ -292,6 +305,13 @@
             exportWithLookup : false,
             exportWithOrder : false
         };
+
+        innerLayout({
+            spacing_closed: 30,
+            east__minSize: 200,
+            east__maxSize: 350
+        });
+
         var url;
         switch($scope.reportType){
             case "dailyClinicVisitScheduleReport":

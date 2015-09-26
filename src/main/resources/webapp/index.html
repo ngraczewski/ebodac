@@ -19,7 +19,7 @@
             <li ng-show="active('#/ebodac/settings')" ng-class="active('#/ebodac/settings')"><a href="#/ebodac/settings">{{msg('ebodac.web.settings.title')}}</a></li>
         </ul>
     </div>
-    <div class="ui-layout-content">
+    <div ng-controller="MdsEmbeddableCtrl" class="ui-layout-content">
         <div class="tab-content" id="tab-content">
             <div id="main-content" class="active">
                 <div ng-view></div>

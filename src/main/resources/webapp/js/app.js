@@ -59,7 +59,7 @@
             .when('/ebodac/subjects', { redirectTo: '/mds/dataBrowser/' + subjectId + '/ebodac' })
             .when('/ebodac/visits', { redirectTo: '/mds/dataBrowser/' + visitId + '/ebodac' })
             .when('/ebodac/settings', {templateUrl: '../ebodac/resources/partials/settings.html', controller: 'EbodacSettingsCtrl'})
-            .when('/ebodac/reports', {templateUrl: '../ebodac/resources/partials/reports.html' })
+            .when('/ebodac/reports', {templateUrl: '../ebodac/resources/partials/reports.html', controller: 'EbodacBasicCtrl' })
             .when('/ebodac/reportPrimerVaccination', { redirectTo: '/mds/dataBrowser/' + reportPrimerVaccinationId + '/ebodac' })
             .when('/ebodac/reportBoosterVaccination', { redirectTo: '/mds/dataBrowser/' + reportBoosterVaccinationId + '/ebodac' })
             .when('/ebodac/getReport/:reportType', { templateUrl: '../ebodac/resources/partials/report.html', controller: 'EbodacReportsCtrl' })

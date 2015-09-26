@@ -20,6 +20,13 @@ if ($scope.selectedEntity.name === "Participant" || $scope.selectedEntity.name =
     $scope.showViewTrashButton = false;
     $scope.showImportButton = false;
     $scope.backToEntityList = function() {
+        $scope.dataRetrievalError = false;
+        innerLayout({
+            spacing_closed: 30,
+            east__minSize: 200,
+            east__maxSize: 350
+        });
+        $scope.selectedEntity = undefined;
         window.location.replace('#/ebodac/reports');
     };
 }
@@ -195,9 +202,11 @@ $scope.addEntityInstanceDefault = function () {
 $scope.addEntityInstance = function() {
     if ($scope.selectedEntity.name === "Participant") {
         var input = $("#phoneNumberForm");
-        var fieldValue = input.val().replace(/ /g, '');
-        input.val(fieldValue);
-        input.trigger('input');
+        var fieldValue = input.val();
+        if (fieldValue !== null && fieldValue !== undefined) {
+            input.val(fieldValue.replace(/ /g, ''));
+            input.trigger('input');
+        }
 
         $http.get('../ebodac/ebodac-config')
         .success(function(response){
