@@ -55,7 +55,7 @@ public class LookupServiceImpl implements LookupService {
             }
 
             if(queryParams.getPage() == null) {
-                queryParams = new QueryParams(1, queryParams.getPageSize(), queryParams.getOrder());
+                queryParams = new QueryParams(1, queryParams.getPageSize(), queryParams.getOrderList());
             }
 
             if (entities == null) {
@@ -68,7 +68,7 @@ public class LookupServiceImpl implements LookupService {
         recordCount = mdsLookupService.countAll(entityType.getName());
 
         int page;
-        if(queryParams.getPageSize() != null && queryParams.getPage() != null) {
+        if(queryParams != null && queryParams.getPageSize() != null && queryParams.getPage() != null) {
             rowCount = (int) Math.ceil(recordCount / (double) queryParams.getPageSize());
             page = queryParams.getPage();
             entities = mdsLookupService.retrieveAll(entityType.getName(), queryParams);

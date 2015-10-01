@@ -30,6 +30,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -174,7 +175,7 @@ public class ExportTemplatesHelperTest {
         when(lookupService.getEntities(ReportPrimerVaccination.class, null, null, null)).thenReturn(records);
         when(configService.getConfig()).thenReturn(config);
 
-        PowerMockito.whenNew(QueryParams.class).withArguments(Mockito.any()).thenReturn(null);
+        PowerMockito.whenNew(QueryParams.class).withArguments(anyInt(), anyInt(), Mockito.anyCollection()).thenReturn(null);
 
         PdfReportBTemplate pdfReportBTemplate = mock(PdfReportBTemplate.class);
         PowerMockito.whenNew(PdfReportBTemplate.class).withArguments(Mockito.any()).thenReturn(pdfReportBTemplate);
@@ -240,7 +241,7 @@ public class ExportTemplatesHelperTest {
         when(lookupService.getEntities(ReportPrimerVaccination.class, null, null, null)).thenReturn(records);
         when(configService.getConfig()).thenReturn(config);
 
-        PowerMockito.whenNew(QueryParams.class).withArguments(Mockito.any()).thenReturn(null);
+        PowerMockito.whenNew(QueryParams.class).withArguments(anyInt(), anyInt(), Mockito.anyCollection()).thenReturn(null);
 
         PdfReportBTemplate pdfReportBTemplate = mock(PdfReportBTemplate.class);
         PowerMockito.whenNew(PdfReportBTemplate.class).withArguments(Mockito.any()).thenReturn(pdfReportBTemplate);
@@ -319,7 +320,7 @@ public class ExportTemplatesHelperTest {
         when(lookupService.getEntities(ReportPrimerVaccination.class, null, null, null)).thenReturn(records);
         when(configService.getConfig()).thenReturn(config);
 
-        PowerMockito.whenNew(QueryParams.class).withArguments(Mockito.any()).thenReturn(null);
+        PowerMockito.whenNew(QueryParams.class).withArguments(anyInt(), anyInt(), Mockito.anyCollection()).thenReturn(null);
 
         PdfReportBTemplate pdfReportBTemplate = mock(PdfReportBTemplate.class);
         PowerMockito.whenNew(PdfReportBTemplate.class).withArguments(Mockito.any()).thenReturn(pdfReportBTemplate);

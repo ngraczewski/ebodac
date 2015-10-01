@@ -13,14 +13,15 @@ import org.motechproject.ebodac.domain.ReportPrimerVaccination;
 import org.motechproject.ebodac.domain.Visit;
 import org.motechproject.ebodac.exception.EbodacExportException;
 import org.motechproject.ebodac.exception.EbodacLookupException;
+import org.motechproject.ebodac.helper.DtoLookupHelper;
+import org.motechproject.ebodac.helper.ExportTemplatesHelper;
 import org.motechproject.ebodac.service.ExportService;
 import org.motechproject.ebodac.service.LookupService;
-import org.motechproject.ebodac.helper.ExportTemplatesHelper;
 import org.motechproject.ebodac.service.impl.csv.SubjectCsvImportCustomizer;
 import org.motechproject.ebodac.service.impl.csv.VisitCsvExportCustomizer;
-import org.motechproject.ebodac.helper.DtoLookupHelper;
 import org.motechproject.ebodac.template.PdfBasicTemplate;
 import org.motechproject.ebodac.template.XlsBasicTemplate;
+import org.motechproject.ebodac.util.QueryParamsBuilder;
 import org.motechproject.ebodac.web.domain.GridSettings;
 import org.motechproject.mds.dto.CsvImportResults;
 import org.motechproject.mds.dto.EntityDto;
@@ -29,7 +30,6 @@ import org.motechproject.mds.query.QueryParams;
 import org.motechproject.mds.service.CsvImportExportService;
 import org.motechproject.mds.service.EntityService;
 import org.motechproject.mds.util.Constants;
-import org.motechproject.mds.util.Order;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static org.apache.commons.lang.CharEncoding.UTF_8;
@@ -116,8 +116,8 @@ public class InstanceController {
                 "Content-Disposition",
                 "attachment; filename=" + fileName + "." + outputFormat.toLowerCase());
 
-        Order order = StringUtils.isNotEmpty(settings.getSortColumn()) ? new Order(settings.getSortColumn(), settings.getSortDirection()) : null;
-        QueryParams queryParams = new QueryParams(1, StringUtils.equalsIgnoreCase(exportRecords, "all") ? null : Integer.valueOf(exportRecords), order);
+        QueryParams queryParams = new QueryParams(1, StringUtils.equalsIgnoreCase(exportRecords, "all") ? null : Integer.valueOf(exportRecords),
+                QueryParamsBuilder.buildOrderList(settings, getFields(settings)));
 
         if (className.equals(ReportPrimerVaccination.class.getName())) {
             exportEntity(settings, exportRecords, outputFormat, response, EbodacConstants.PRIMER_VACCINATION_REPORT_NAME,
@@ -226,11 +226,8 @@ public class InstanceController {
                 "Content-Disposition",
                 "attachment; filename=" + fileName + "." + outputFormat.toLowerCase());
 
-        Order order = null;
-        if (StringUtils.isNotBlank(settings.getSortColumn())) {
-            order = new Order(settings.getSortColumn(), settings.getSortDirection());
-        }
-        QueryParams queryParams = new QueryParams(1, StringUtils.equalsIgnoreCase(exportRecords, "all") ? null : Integer.valueOf(exportRecords), order);
+        QueryParams queryParams = new QueryParams(1, StringUtils.equalsIgnoreCase(exportRecords, "all") ? null : Integer.valueOf(exportRecords),
+                QueryParamsBuilder.buildOrderList(settings, getFields(settings)));
 
         try {
             if (EbodacConstants.PDF_EXPORT_FORMAT.equals(outputFormat)) {
@@ -259,7 +256,7 @@ public class InstanceController {
         if (gridSettings.getFields() == null) {
             return null;
         } else {
-            return objectMapper.readValue(gridSettings.getFields(), new TypeReference<HashMap>() {});
+            return objectMapper.readValue(gridSettings.getFields(), new TypeReference<LinkedHashMap>() {});
         }
     }
 }

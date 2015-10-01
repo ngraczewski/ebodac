@@ -174,7 +174,7 @@ public class LookupServiceIT extends BasePaxIT{
 
         List<Visit> visitList1 = visitDataService.retrieveAll();
 
-        QueryParams queryParams = new QueryParams(1, null, null);
+        QueryParams queryParams = new QueryParams(1, null);
         for( int i = 0 ; i < lookups.length; i ++) {
             Records<Visit> records = lookupService.getEntities(Visit.class, lookups[i], fields[i], queryParams);
             List<Visit> visitList = records.getRows();
@@ -204,7 +204,7 @@ public class LookupServiceIT extends BasePaxIT{
         int []expectedResults = { 1, 2, 1, 1, 2, 2};
 
         List<Subject> subject = subjectDataService.retrieveAll();
-        QueryParams queryParams = new QueryParams(1, null, null);
+        QueryParams queryParams = new QueryParams(1, null);
         for( int i = 0 ; i < lookups.length; i ++) {
             Records<Subject> records = lookupService.getEntities(Subject.class, lookups[i], fields[i], queryParams);
             List<Subject> subjectList = records.getRows();
@@ -228,7 +228,7 @@ public class LookupServiceIT extends BasePaxIT{
             };
             int[] expectedResults = {4, 1};
 
-            QueryParams queryParams = new QueryParams(1, null, null);
+            QueryParams queryParams = new QueryParams(1, null);
             for (int i = 0; i < lookups.length; i++) {
                 Records<ReportPrimerVaccination> records = lookupService.getEntities(ReportPrimerVaccination.class, lookups[i], fields[i], queryParams);
                 List<ReportPrimerVaccination> reportPrimerVaccinations = records.getRows();
@@ -255,7 +255,7 @@ public class LookupServiceIT extends BasePaxIT{
             };
             int[] expectedResults = {3, 1};
 
-            QueryParams queryParams = new QueryParams(1, null, null);
+            QueryParams queryParams = new QueryParams(1, null);
             for (int i = 0; i < lookups.length; i++) {
                 Records<ReportBoosterVaccination> records = lookupService.getEntities(ReportBoosterVaccination.class, lookups[i], fields[i], queryParams);
                 List<ReportBoosterVaccination> reportBoosterVaccinations = records.getRows();
@@ -289,7 +289,7 @@ public class LookupServiceIT extends BasePaxIT{
         };
         int []expectedResults = { 2, 4, 2, 3, 2, 2, 4};
 
-        QueryParams queryParams = new QueryParams(1, null, null);
+        QueryParams queryParams = new QueryParams(1, null);
         for( int i = 0 ; i < lookups.length; i ++) {
             Records<?> records = lookupService.getEntities(MissedVisitsReportDto.class, Visit.class, lookups[i], fields[i], queryParams);
             List<?> missedVisitsReportDtos = records.getRows();

@@ -1,7 +1,6 @@
 package org.motechproject.ebodac.web;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.joda.time.LocalDate;
@@ -10,15 +9,15 @@ import org.motechproject.ebodac.constants.EbodacConstants;
 import org.motechproject.ebodac.domain.MissedVisitsReportDto;
 import org.motechproject.ebodac.domain.Visit;
 import org.motechproject.ebodac.exception.EbodacLookupException;
+import org.motechproject.ebodac.helper.DtoLookupHelper;
 import org.motechproject.ebodac.service.ConfigService;
 import org.motechproject.ebodac.service.LookupService;
 import org.motechproject.ebodac.service.ReportService;
-import org.motechproject.ebodac.helper.DtoLookupHelper;
+import org.motechproject.ebodac.util.QueryParamsBuilder;
 import org.motechproject.ebodac.web.domain.GridSettings;
 import org.motechproject.ebodac.web.domain.Records;
 import org.motechproject.mds.dto.LookupDto;
 import org.motechproject.mds.query.QueryParams;
-import org.motechproject.mds.util.Order;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +32,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -79,7 +77,7 @@ public class ReportController {
     @RequestMapping(value = "/getReport/{reportType}", method = RequestMethod.POST)
     @PreAuthorize("hasAnyRole('mdsDataAccess', 'manageEbodac')")
     @ResponseBody
-    public Records<?> getReport(@PathVariable String reportType, GridSettings settings) throws NoSuchMethodException, InstantiationException, IllegalAccessException, IOException, InvocationTargetException {
+    public Records<?> getReport(@PathVariable String reportType, GridSettings settings) {
         switch (reportType) {
             case "dailyClinicVisitScheduleReport" :
                 return getDailyClinicVisitScheduleReport(settings);
@@ -186,26 +184,18 @@ public class ReportController {
     }
 
     private Records<?> getDailyClinicVisitScheduleReport(GridSettings settings) {
-        Order order = null;
-        if (StringUtils.isNotBlank(settings.getSortColumn())) {
-            order = new Order(settings.getSortColumn(), settings.getSortDirection());
-        }
-        QueryParams queryParams = new QueryParams(settings.getPage(), settings.getRows(), order);
         try {
+            QueryParams queryParams = QueryParamsBuilder.buildQueryParams(settings, getFields(settings.getFields()));
             return lookupService.getEntities(Visit.class, settings.getLookup(), settings.getFields(), queryParams);
-        } catch (EbodacLookupException e) {
+        } catch (IOException | EbodacLookupException e) {
             LOGGER.error(e.getMessage(), e);
             return new Records<Object>(null);
         }
     }
 
     private Records<?> getFollowupsAfterPrimeInjectionReport(GridSettings settings) {
-        Order order = null;
-        if (StringUtils.isNotBlank(settings.getSortColumn())) {
-            order = new Order(settings.getSortColumn(), settings.getSortDirection());
-        }
-        QueryParams queryParams = new QueryParams(settings.getPage(), settings.getRows(), order);
         try {
+            QueryParams queryParams = QueryParamsBuilder.buildQueryParams(settings, getFields(settings.getFields()));
             settings = DtoLookupHelper.changeLookupForFollowupsAfterPrimeInjectionReport(settings);
             if(settings == null) {
                 return new Records<Object>(null);
@@ -223,11 +213,7 @@ public class ReportController {
             if(settings == null) {
                 return new Records<Object>(null);
             }
-            Order order = null;
-            if (StringUtils.isNotBlank(settings.getSortColumn())) {
-                order = new Order(settings.getSortColumn(), settings.getSortDirection());
-            }
-            QueryParams queryParams = new QueryParams(settings.getPage(), settings.getRows(), order);
+            QueryParams queryParams = QueryParamsBuilder.buildQueryParams(settings, getFields(settings.getFields()));
             return lookupService.getEntities(MissedVisitsReportDto.class, Visit.class, settings.getLookup(), settings.getFields(), queryParams);
         } catch (IOException | EbodacLookupException e) {
             LOGGER.error(e.getMessage(), e);
@@ -236,6 +222,10 @@ public class ReportController {
     }
 
     private Map<String, Object> getFields(String json) throws IOException {
-        return objectMapper.readValue(json, new TypeReference<HashMap>() {});
+        if (json == null) {
+            return null;
+        } else {
+            return objectMapper.readValue(json, new TypeReference<LinkedHashMap>() {});
+        }
     }
 }
