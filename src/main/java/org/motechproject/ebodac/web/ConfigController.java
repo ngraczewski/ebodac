@@ -53,7 +53,7 @@ public class ConfigController {
     @ResponseBody
     public Config updateConfig(@RequestBody Config config) {
         String directory = config.getFtpsDirectory();
-        if (!directory.endsWith(File.separator)) {
+        if (directory != null && !directory.endsWith(File.separator)) {
             directory += File.separator;
         }
         config.setFtpsDirectory(directory);
