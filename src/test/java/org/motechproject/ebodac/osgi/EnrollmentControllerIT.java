@@ -143,6 +143,7 @@ public class EnrollmentControllerIT extends BasePaxIT {
 
         secondSubject = new Subject("1000000162", "Rafal", "Dabacki", "Ebacki",
                 "44443333222", "address1", Language.Susu, "community", "B05-SL10001", "chiefdom", "section", "district");
+        secondSubject.setPrimerVaccinationDate(new LocalDate(2115, 10, 10));
 
         testVisits.add(VisitUtils.createVisit(null, VisitType.SCREENING, LocalDate.parse("2014-10-17", formatter),
                 null, "owner"));
@@ -153,7 +154,7 @@ public class EnrollmentControllerIT extends BasePaxIT {
         testVisits.add(VisitUtils.createVisit(firstSubject, VisitType.BOOST_VACCINATION_THIRD_FOLLOW_UP_VISIT, null,
                 LocalDate.parse("2115-10-19", formatter), "owner"));
 
-        testVisits.add(VisitUtils.createVisit(secondSubject, VisitType.PRIME_VACCINATION_DAY, null,
+        testVisits.add(VisitUtils.createVisit(secondSubject, VisitType.FIRST_LONG_TERM_FOLLOW_UP_VISIT, null,
                 LocalDate.parse("2115-10-19", formatter), "owner"));
 
         Visit visit = testVisits.get(2);
@@ -223,13 +224,10 @@ public class EnrollmentControllerIT extends BasePaxIT {
         checkResponse(200, "", reenrollVisit(visit, 200));
 
         List<Enrollment> enrollments = enrollmentDataService.retrieveAll();
-        assertEquals(2, enrollments.size());
+        assertEquals(1, enrollments.size());
 
-        checkCampaignEnrollment("1000000162", VisitType.PRIME_VACCINATION_DAY.getValue(),
+        checkCampaignEnrollment("1000000162", VisitType.FIRST_LONG_TERM_FOLLOW_UP_VISIT.getValue(),
                 LocalDate.parse("2115-10-11", formatter), enrollments.get(0));
-
-        checkCampaignEnrollment("1000000162", EbodacConstants.BOOSTER_RELATED_MESSAGES,
-                LocalDate.parse("2115-10-11", formatter), enrollments.get(1));
     }
 
     @Test

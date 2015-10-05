@@ -550,6 +550,8 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
     @Test
     public void shouldCheckIfSubjectIsEnrolled() throws IOException {
         Subject subject = createSubjectWithRequireData("1");
+        subject.setPrimerVaccinationDate(new LocalDate(2115, 10, 11));
+        subjectService.update(subject);
 
         Visit visit = new Visit();
         visit.setType(VisitType.BOOST_VACCINATION_DAY);

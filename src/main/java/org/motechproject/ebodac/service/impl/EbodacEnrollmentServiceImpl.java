@@ -60,7 +60,11 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
 
         if (visits != null) {
             for (Visit visit : visits) {
-                if (visit.getDate() == null || VisitType.PRIME_VACCINATION_DAY.equals(visit.getType())) {
+                if (VisitType.PRIME_VACCINATION_DAY.equals(visit.getType())) {
+                    if (visit.getDate() != null) {
+                        enrollSubject(visit);
+                    }
+                } else if (visit.getDate() == null) {
                     enrollSubject(visit);
                 }
             }
@@ -114,9 +118,13 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
 
     @Override
     public void enrollOrCompleteCampaignForSubject(Visit visit) {
-        if (visit.getDate() != null && !VisitType.PRIME_VACCINATION_DAY.equals(visit.getType())) {
-            completeCampaignForSubject(visit);
-        } else {
+        if (visit.getDate() != null) {
+            if (VisitType.PRIME_VACCINATION_DAY.equals(visit.getType())) {
+                enrollSubject(visit);
+            } else {
+                completeCampaignForSubject(visit);
+            }
+        } else if (!VisitType.PRIME_VACCINATION_DAY.equals(visit.getType())) {
             enrollSubject(visit);
         }
     }
@@ -150,8 +158,7 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
     @Override
     public void reenrollSubject(Visit visit) {
         if (VisitType.PRIME_VACCINATION_DAY.equals(visit.getType())) {
-            reenrollSubjectWithNewDate(visit.getSubject().getSubjectId(), visit.getType().getValue(), visit.getMotechProjectedDate());
-            reenrollSubjectWithNewDate(visit.getSubject().getSubjectId(), EbodacConstants.BOOSTER_RELATED_MESSAGES, visit.getMotechProjectedDate());
+            throw new EbodacEnrollmentException("Prime Vaccination Day Visit date cannot be changed", "ebodac.reenroll.error.primeVaccinationDateChanged");
         } else if (!VisitType.UNSCHEDULED_VISIT.equals(visit.getType()) && !VisitType.SCREENING.equals(visit.getType())) {
             reenrollSubjectWithNewDate(visit.getSubject().getSubjectId(), visit.getType().getValue(), visit.getMotechProjectedDate());
         }
@@ -164,16 +171,19 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
     }
 
     @Override
-    public void withdrawalSubject(Subject subject) {
-        if (subject.getDateOfDisconStd() != null) {
-            if (subject.getVisits() != null) {
-                for (Visit visit: subject.getVisits()) {
+    public void withdrawalOrEnrollSubject(Subject oldSubject, Subject newSubject) {
+        if (newSubject.getPrimerVaccinationDate() != null && oldSubject.getPrimerVaccinationDate() == null) {
+            enrollSubject(newSubject);
+        }
+        if (newSubject.getDateOfDisconStd() != null && oldSubject.getDateOfDisconStd() == null) {
+            if (newSubject.getVisits() != null) {
+                for (Visit visit: newSubject.getVisits()) {
                     completeCampaignForSubject(visit);
                 }
             }
-        } else if (subject.getDateOfDisconVac() != null) {
+        } else if (newSubject.getDateOfDisconVac() != null && oldSubject.getDateOfDisconVac() == null) {
             for (String campaignName: configService.getConfig().getDisconVacCampaignsList()) {
-                completeCampaignForSubject(subject, campaignName);
+                completeCampaignForSubject(newSubject, campaignName);
             }
         }
     }
@@ -195,7 +205,7 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
         SubjectEnrollments subjectEnrollments = subjectEnrollmentsDataService.findEnrollmentBySubjectId(visit.getSubject().getSubjectId());
         String campaignName = visit.getType().getValue();
 
-        if(null == subjectEnrollments) {
+        if (null == subjectEnrollments) {
             return false;
         }
 
@@ -242,8 +252,8 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
     private void enrollSubject(Visit visit) {
         try {
             if (VisitType.PRIME_VACCINATION_DAY.equals(visit.getType())) {
-                enrollNew(visit.getSubject(), visit.getType().getValue(), visit.getMotechProjectedDate());
-                enrollNew(visit.getSubject(), EbodacConstants.BOOSTER_RELATED_MESSAGES, visit.getMotechProjectedDate());
+                enrollNew(visit.getSubject(), visit.getType().getValue(), visit.getDate());
+                enrollNew(visit.getSubject(), EbodacConstants.BOOSTER_RELATED_MESSAGES, visit.getDate());
             } else if (!VisitType.UNSCHEDULED_VISIT.equals(visit.getType()) && !VisitType.SCREENING.equals(visit.getType())) {
                 enrollNew(visit.getSubject(), visit.getType().getValue(), visit.getMotechProjectedDate());
             }
@@ -336,6 +346,10 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
         }
 
         if (referenceDate != null) {
+            if (VisitType.PRIME_VACCINATION_DAY.getValue().equals(campaignName) && !referenceDate.equals(enrollment.getReferenceDate())) {
+                throw new EbodacEnrollmentException("Cannot enroll Participant with id: %s to Campaign with name: %s, because reference date cannot be changed for Prime Vaccination Day Campaign",
+                        "ebodac.enroll.error.primeVaccinationDateChanged", subjectId, enrollment.getCampaignName());
+            }
             enrollment.setReferenceDate(referenceDate);
             enrollment.setParentEnrollment(null);
         } else if (enrollment.getReferenceDate() == null) {
@@ -466,6 +480,10 @@ public class EbodacEnrollmentServiceImpl implements EbodacEnrollmentService {
         if (StringUtils.isBlank(subject.getPhoneNumber())) {
             throw new EbodacEnrollmentException("Cannot enroll Participant with id: %s, because participant phone number is empty",
                     "ebodac.enroll.error.emptyPhoneNumber", subject.getSubjectId());
+        }
+        if (subject.getPrimerVaccinationDate() == null) {
+            throw new EbodacEnrollmentException("Cannot enroll Participant with id: %s, because participant Prime Vaccination Date is empty",
+                    "ebodac.enroll.error.emptyPrimeVaccinationDate", subject.getSubjectId());
         }
 
         return subject.getDateOfDisconVac() != null;

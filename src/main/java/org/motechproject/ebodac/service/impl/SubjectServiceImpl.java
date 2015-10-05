@@ -71,6 +71,9 @@ public class SubjectServiceImpl implements SubjectService {
             if (subjectInDb.equalsForRave(newSubject)) {
                 return subjectInDb;
             }
+
+            ebodacEnrollmentService.withdrawalOrEnrollSubject(subjectInDb, newSubject);
+
             subjectInDb.setGender(newSubject.getGender());
             subjectInDb.setStageId(newSubject.getStageId());
             subjectInDb.setDateOfBirth(newSubject.getDateOfBirth());
@@ -78,8 +81,6 @@ public class SubjectServiceImpl implements SubjectService {
             subjectInDb.setBoosterVaccinationDate(newSubject.getBoosterVaccinationDate());
             subjectInDb.setDateOfDisconVac(newSubject.getDateOfDisconVac());
             subjectInDb.setDateOfDisconStd(newSubject.getDateOfDisconStd());
-
-            ebodacEnrollmentService.withdrawalSubject(subjectInDb);
 
             return update(subjectInDb);
         } else {

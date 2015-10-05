@@ -97,7 +97,6 @@ public class EbodacEnrollmentController {
             return new ResponseEntity<>(getMessageFromException(e), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-
         return new ResponseEntity<>("ebodac.reenrollVisit.successmMsg", HttpStatus.OK);
     }
 
@@ -259,6 +258,10 @@ public class EbodacEnrollmentController {
             return new ResponseEntity<>("ebodac.enrollment.error.emptyCampaignName", HttpStatus.BAD_REQUEST);
         }
 
+        if (VisitType.PRIME_VACCINATION_DAY.getValue().equals(campaignName)) {
+            return new ResponseEntity<>("ebodac.enrollment.error.primeVaccinationDateChanged", HttpStatus.BAD_REQUEST);
+        }
+
         try {
             LocalDate referenceDate = LocalDate.parse(date, DateTimeFormat.forPattern(EbodacConstants.ENROLLMENT_DATE_FORMAT));
             ebodacEnrollmentService.enrollSubjectToCampaignWithNewDate(subjectId, campaignName, referenceDate);
@@ -285,6 +288,10 @@ public class EbodacEnrollmentController {
 
         if (StringUtils.isBlank(campaignName)) {
             return new ResponseEntity<>("ebodac.enrollment.error.emptyCampaignName", HttpStatus.BAD_REQUEST);
+        }
+
+        if (VisitType.PRIME_VACCINATION_DAY.getValue().equals(campaignName)) {
+            return new ResponseEntity<>("ebodac.enrollment.error.primeVaccinationDateChanged", HttpStatus.BAD_REQUEST);
         }
 
         try {

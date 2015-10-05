@@ -26,7 +26,7 @@ public interface EbodacEnrollmentService {
 
     void reenrollSubjectWithNewDate(String subjectId, String campaignName, LocalDate date);
 
-    void withdrawalSubject(Subject subject);
+    void withdrawalOrEnrollSubject(Subject oldSubject, Subject newSubject);
 
     void completeCampaign(String subjectId, String campaignName);
 
