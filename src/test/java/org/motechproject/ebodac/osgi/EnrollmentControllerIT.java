@@ -60,6 +60,7 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(PaxExam.class)
@@ -585,6 +586,34 @@ public class EnrollmentControllerIT extends BasePaxIT {
         assertEquals(EnrollmentStatus.ENROLLED, enrollment3.getStatus());
         assertTrue(scheduler.checkExists(TriggerKey.triggerKey(triggerKeyString3)));
         assertEquals(1, enrollment3.getDuplicatedEnrollments().size());
+    }
+
+    @Test
+    public void shouldCreateEnrollmentRecordsForSubject() throws IOException, InterruptedException {
+
+        InputStream inputStream = getClass().getResourceAsStream("/enrollSimple.csv");
+        raveImportService.importCsv(new InputStreamReader(inputStream), "/enrollSimple.csv");
+        inputStream.close();
+
+        Subject subject = subjectDataService.findSubjectBySubjectId("1");
+        assertNotNull(subject);
+
+        SubjectEnrollments subjectEnrollments = subjectEnrollmentsDataService.findEnrollmentBySubjectId(subject.getSubjectId());
+        assertNull(subjectEnrollments);
+
+        subject.setLanguage(Language.English);
+        subject.setPhoneNumber("123456789");
+
+        checkResponse(200, "", updateSubject(subject, 200));
+
+        subjectEnrollments = subjectEnrollmentsDataService.findEnrollmentBySubjectId(subject.getSubjectId());
+        assertNotNull(subjectEnrollments);
+        assertEquals(EnrollmentStatus.UNENROLLED, subjectEnrollments.getStatus());
+        assertEquals(3, subjectEnrollments.getEnrollments().size());
+
+        for (Enrollment enrollment: subjectEnrollments.getEnrollments()) {
+            assertEquals(EnrollmentStatus.UNENROLLED, enrollment.getStatus());
+        }
     }
 
     private String updateSubject(Subject subject, int errorCode) throws IOException, InterruptedException {

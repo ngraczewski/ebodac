@@ -328,6 +328,12 @@ public class EbodacEnrollmentController {
                 LOGGER.debug(e.getMessage(), e);
                 return new ResponseEntity<>(getMessageFromException(e), HttpStatus.INTERNAL_SERVER_ERROR);
             }
+        } else {
+            Subject oldSubject = subjectService.findSubjectBySubjectId(subject.getSubjectId());
+            if (subject.getVisits() != null && subject.getPrimerVaccinationDate() != null && StringUtils.isNotBlank(subject.getPhoneNumber())
+                    && subject.getLanguage() != null && (oldSubject.getLanguage() == null || StringUtils.isBlank(subject.getPhoneNumber()))) {
+                ebodacEnrollmentService.createEnrollmentRecordsForSubject(oldSubject);
+            }
         }
 
         return new ResponseEntity<>(HttpStatus.OK);
