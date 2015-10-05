@@ -821,6 +821,30 @@ public class EbodacEnrollmentServiceIT extends BasePaxIT {
         assertEquals(null, enrollment2.getParentEnrollment());
     }
 
+    @Test
+    public void shouldEnrollWhenDataAreComingInTwoParts() throws IOException {
+        Subject subject = createSubjectWithRequireData("1020000111");
+
+        InputStream inputStream = getClass().getResourceAsStream("/motech_20151002_154600.csv");
+        raveImportService.importCsv(new InputStreamReader(inputStream), "/motech_20151002_154600.csv");
+        inputStream.close();
+
+        SubjectEnrollments subjectEnrollments = subjectEnrollmentsDataService.findEnrollmentBySubjectId(subject.getSubjectId());
+        assertNull(subjectEnrollments);
+
+        inputStream = getClass().getResourceAsStream("/motech_20151002_160010.csv");
+        raveImportService.importCsv(new InputStreamReader(inputStream), "/motech_20151002_160010.csv");
+        inputStream.close();
+
+        subjectEnrollments = subjectEnrollmentsDataService.findEnrollmentBySubjectId(subject.getSubjectId());
+        assertEquals(EnrollmentStatus.ENROLLED, subjectEnrollments.getStatus());
+        assertEquals(10, subjectEnrollments.getEnrollments().size());
+
+        for (Enrollment enrollment : subjectEnrollments.getEnrollments()) {
+            assertEquals(EnrollmentStatus.ENROLLED, enrollment.getStatus());
+        }
+    }
+
     private void clearJobs() throws SchedulerException {
         NameMatcher<JobKey> nameMatcher = NameMatcher.jobNameStartsWith("org.motechproject.messagecampaign");
         Set<JobKey> jobKeys = scheduler.getJobKeys(GroupMatcher.jobGroupStartsWith("default"));

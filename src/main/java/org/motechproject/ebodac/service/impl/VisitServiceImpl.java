@@ -50,6 +50,9 @@ public class VisitServiceImpl implements VisitService {
                 if (existingVisit.visitDatesChanged(visit)) {
                     existingVisit.setDate(visit.getDate());
                     existingVisit.setDateProjected(visit.getDateProjected());
+                    if (existingVisit.getMotechProjectedDate() == null) {
+                        existingVisit.setMotechProjectedDate(visit.getMotechProjectedDate());
+                    }
 
                     ebodacEnrollmentService.enrollOrCompleteCampaignForSubject(existingVisit);
 
