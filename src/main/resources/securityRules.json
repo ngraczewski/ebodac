@@ -1,13 +1,13 @@
 [
   {
     "active": true,
-    "pattern": "/**/ebodac/registration/**",
+    "pattern": "https://**/ebodac/registration/**",
     "supportedSchemes": [
       "BASIC",
       "USERNAME_PASSWORD"
     ],
     "protocol": "HTTPS",
-    "priority": 3,
+    "priority": 4,
     "rest": true,
     "origin": "SYSTEM_MODULE_EBODAC",
     "version": "0.26",
@@ -25,6 +25,23 @@
     ],
     "protocol": "HTTP",
     "priority": 3,
+    "rest": true,
+    "origin": "SYSTEM_MODULE_EBODAC",
+    "version": "0.26",
+    "methodsRequired": [
+      "POST"
+    ]
+  },
+
+  {
+    "active": true,
+    "pattern": "https://**/ebodac/ebodac-config/**",
+    "supportedSchemes": [
+      "BASIC",
+      "USERNAME_PASSWORD"
+    ],
+    "protocol": "HTTPS",
+    "priority": 4,
     "rest": true,
     "origin": "SYSTEM_MODULE_EBODAC",
     "version": "0.26",
@@ -40,23 +57,6 @@
       "BASIC",
       "USERNAME_PASSWORD"
     ],
-    "protocol": "HTTPS",
-    "priority": 3,
-    "rest": true,
-    "origin": "SYSTEM_MODULE_EBODAC",
-    "version": "0.26",
-    "methodsRequired": [
-      "POST"
-    ]
-  },
-
-  {
-    "active": true,
-    "pattern": "/**/ebodac/ebodac-config/**",
-    "supportedSchemes": [
-      "BASIC",
-      "USERNAME_PASSWORD"
-    ],
     "protocol": "HTTP",
     "priority": 3,
     "rest": true,
@@ -69,13 +69,13 @@
 
   {
     "active": true,
-    "pattern": "/**/ivr/ivr-configs/**",
+    "pattern": "https://**/ivr/ivr-configs/**",
     "supportedSchemes": [
       "BASIC",
       "USERNAME_PASSWORD"
     ],
     "protocol": "HTTPS",
-    "priority": 3,
+    "priority": 4,
     "rest": true,
     "origin": "SYSTEM_MODULE_EBODAC",
     "version": "0.26",
@@ -103,13 +103,13 @@
 
   {
     "active": true,
-    "pattern": "/**/sms/configs/**",
+    "pattern": "https://**/sms/configs/**",
     "supportedSchemes": [
       "BASIC",
       "USERNAME_PASSWORD"
     ],
     "protocol": "HTTPS",
-    "priority": 3,
+    "priority": 4,
     "rest": true,
     "origin": "SYSTEM_MODULE_EBODAC",
     "version": "0.26",
@@ -137,13 +137,13 @@
 
   {
     "active": true,
-    "pattern": "/**/tasks/api/task/import/**",
+    "pattern": "https://**/tasks/api/task/import/**",
     "supportedSchemes": [
       "BASIC",
       "USERNAME_PASSWORD"
     ],
     "protocol": "HTTPS",
-    "priority": 3,
+    "priority": 4,
     "rest": true,
     "origin": "SYSTEM_MODULE_EBODAC",
     "version": "0.26",
