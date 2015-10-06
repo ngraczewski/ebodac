@@ -8,8 +8,8 @@ import org.openqa.selenium.WebDriver;
 public class ParticipantPage extends AbstractBasePage {
 
     public static final String URL_PATH = "/home#/mds/dataBrowser";
-    static final By PARTICIPANT = By.id("1");
-    static final By PHONE_NUMBER = By.xpath("//tr[@id='1']/td[@aria-describedby='instancesTable_phoneNumber']");
+    static final By PARTICIPANT = By.xpath("//table[@id='instancesTable']/tbody/tr[2]");
+    static final By PHONE_NUMBER = By.xpath("//table[@id='instancesTable']/tbody/tr[2]/td[@aria-describedby='instancesTable_phoneNumber']");
     public ParticipantPage(WebDriver driver) {
         super(driver);
     }

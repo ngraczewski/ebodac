@@ -1,8 +1,5 @@
 package org.motechproject.ebodac.uitest.helper;
 
-/**
- * Created by tomasz on 30.09.15.
- */
 public class TestParticipant {
     public String id;
     public String name;

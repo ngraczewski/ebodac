@@ -10,9 +10,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.cert.CertificateException;
 
-/**
- * Created by tomasz on 28.09.15.
- */
 public class UITestHttpClientHelper extends EbodacHttpClient {
 
     private String SERVER_URL;

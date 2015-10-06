@@ -826,13 +826,12 @@
                         <version>2.3</version>
                         <executions>
                             <execution>
-                                <id>xvfb</id>
-                                <phase>integration-test</phase>
+                                <phase>pre-integration-test</phase>
                                 <goals>
-                                    <goal>xvfb</goal>
+                                    <goal>start-server</goal>
                                 </goals>
                                 <configuration>
-                                    <display>:99</display>
+                                    <background>true</background>
                                 </configuration>
                             </execution>
                         </executions>
@@ -864,9 +863,6 @@
                                 <configuration>
                                     <encoding>UTF-8</encoding>
                                     <runOrder>alphabetical</runOrder>
-                                    <environmentVariables>
-                                        <DISPLAY>:99</DISPLAY>
-                                    </environmentVariables>
                                     <includes>
                                         <include>**/*UiTest.java</include>
                                     </includes>
