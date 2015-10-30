@@ -1,0 +1,27 @@
+<div id="inner-center" class="inner-center ui-layout-center ui-layout-pane ui-layout-pane-center">
+    <div class="header-footer-breadcrumb">
+        <ul class="breadcrumb" role="navigation">
+            <li><a role="menu" href=".">{{msg('server.home')}}</a></li>
+            <li><a role="menu" href="#/bookingApp/">{{msg('bookingApp')}}</a></li>
+            <li ng-show="active('#/bookingApp/screening')" ng-class="active('#/bookingApp/screening')">{{msg('bookingApp.screening')}}</li>
+            <li ng-show="active('#/bookingApp/primeVaccination')" ng-class="active('#/bookingApp/primeVaccination')">{{msg('bookingApp.primeVaccination')}}</li>
+            <li ng-show="active('#/bookingApp/clinicVisitSchedule')" ng-class="active('#/bookingApp/clinicVisitSchedule')">{{msg('bookingApp.clinicVisitSchedule')}}</li>
+            <li ng-show="active('#/bookingApp/reschedule')" ng-class="active('#/bookingApp/reschedule')">{{msg('bookingApp.reschedule')}}</li>
+        </ul>
+    </div>
+    <div class="header-footer">
+        <ul id="content-tabs" class="nav nav-tabs">
+            <li ng-class="active('#/bookingApp/screening')"><a href="#/bookingApp/screening">{{msg('bookingApp.screening')}}</a></li>
+            <li ng-class="active('#/bookingApp/primeVaccination')"><a href="#/bookingApp/primeVaccination">{{msg('bookingApp.primeVaccination')}}</a></li>
+            <li ng-class="active('#/bookingApp/clinicVisitSchedule')"><a href="#/bookingApp/clinicVisitSchedule">{{msg('bookingApp.clinicVisitSchedule')}}</a></li>
+            <li ng-class="active('#/bookingApp/reschedule')"><a href="#/bookingApp/reschedule">{{msg('bookingApp.reschedule')}}</a></li>
+        </ul>
+    </div>
+    <div class="ui-layout-content">
+        <div class="tab-content" id="tab-content">
+            <div id="main-content" class="active">
+                <div ng-view></div>
+            </div>
+        </div>
+    </div>
+</div>
