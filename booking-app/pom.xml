@@ -32,6 +32,8 @@
                         <Resource-Path>booking-app/resources</Resource-Path>
                         <Context-Path>booking-app</Context-Path>
                         <Export-Package>
+                            org.motechproject.bookingapp.domain;version=${project.version},
+                            org.motechproject.bookingapp.repository;version=${project.version}
                         </Export-Package>
                         <Import-Package>
                             org.motechproject.osgi.web,
