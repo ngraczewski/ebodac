@@ -5,4 +5,7 @@
 
     <import resource="classpath*:META-INF/motech/*.xml" />
 
+    <osgi:reference id="clinicDataService"
+                    interface="org.motechproject.bookingapp.repository.ClinicDataService" />
+
 </beans>
