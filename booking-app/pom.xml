@@ -10,6 +10,14 @@
         <relativePath>../</relativePath>
     </parent>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-dataservices-web</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+    </dependencies>
+
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>
     </properties>
@@ -40,6 +48,7 @@
                             org.motechproject.server.config.service,
                             org.motechproject.server.config,
                             org.motechproject.config.service,
+                            org.motechproject.mds.web.domain,
                             *
                         </Import-Package>
                     </instructions>

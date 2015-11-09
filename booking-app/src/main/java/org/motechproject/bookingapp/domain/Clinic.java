@@ -1,14 +1,17 @@
 package org.motechproject.bookingapp.domain;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.domain.MdsEntity;
 
 import java.util.List;
 
 @Entity
-public class Clinic {
+public class Clinic extends MdsEntity {
 
     @Field(required = true)
+    @JsonBackReference
     private Site site;
 
     @Field(required = true)
@@ -46,6 +49,14 @@ public class Clinic {
 
     @Field
     private Integer maxLongTestThirdFollowUpVisits;
+
+    public Site getSite() {
+        return site;
+    }
+
+    public void setSite(Site site) {
+        this.site = site;
+    }
 
     public String getLocation() {
         return location;

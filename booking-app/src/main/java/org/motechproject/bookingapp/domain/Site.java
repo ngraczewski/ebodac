@@ -2,12 +2,13 @@ package org.motechproject.bookingapp.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.domain.MdsEntity;
 
 import javax.jdo.annotations.Persistent;
 import java.util.List;
 
 @Entity
-public class Site {
+public class Site extends MdsEntity {
 
     @Field
     @Persistent(mappedBy = "site")
