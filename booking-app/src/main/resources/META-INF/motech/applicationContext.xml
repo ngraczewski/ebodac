@@ -28,7 +28,6 @@
         <property name="defaultURL" value="/bookingApp/screening"/>
     </bean>
 
-
     <bean id="bookingAppSettings" class="org.motechproject.server.config.SettingsFacade"
         autowire="byType">
     </bean>

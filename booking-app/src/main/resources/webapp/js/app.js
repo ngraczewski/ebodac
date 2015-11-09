@@ -2,12 +2,12 @@
     'use strict';
 
     /* App Module */
-    var bookingApp = angular.module('bookingApp', ['bookingApp.controllers', 'bookingApp.services', 'motech-dashboard', 'mds.directives']), volunteerId;
+    var bookingApp = angular.module('bookingApp', ['bookingApp.controllers', 'bookingApp.services', 'motech-dashboard', 'mds', 'ui.directives']), id;
 
     $.ajax({
-        url: '../mds/entities/getEntity/Booking App/Volunteer',
+        url: '../mds/entities/getEntity/Booking App/Screening',
         success:  function(data) {
-            volunteerId = data.id;
+            id = data.id;
         },
         async: false
     });

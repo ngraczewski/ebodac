@@ -1,0 +1,67 @@
+.booking-app {
+    font-size: 14px;
+}
+
+.booking-app .ui-corner-all {
+    border-radius: 0px;
+}
+
+.booking-app .ui-jqgrid-titlebar {
+    display: none;
+}
+
+.booking-app .ui-jqgrid-labels {
+    border: 1px;
+}
+
+.middle-span {
+    border-left: 0px;
+    border-right: 0px;
+}
+#ui-datepicker-div {
+    z-index: 2000 !important;
+}
+
+.booking-app .label {
+    width: 200;
+}
+
+.booking-app .frame-title {
+    display: none !important;
+}
+
+.input-group-addon {
+    width: 100px;
+    text-align: left;
+}
+
+.select2-choice {
+    border-radius: 0px !important;
+}
+
+.input-group {
+    width: 100%;
+    margin-bottom: 10px !important;
+}
+
+.validator {
+    width: 15px;
+}
+
+.invalid {
+    color: #a94442;
+}
+
+.valid {
+    color: #3c763d;
+}
+
+.my-select {
+    border-top-left-radius: 4px !important;
+    border-bottom-left-radius: 4px !important;
+}
+
+.inline {
+    display: inline;
+}
+
