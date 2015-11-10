@@ -1,14 +1,14 @@
 <div class="row inside booking-app">
     <div class="row inside">
-        <button type="button" class="btn btn-success ng-binding" data-toggle="modal" data-target="#addScreeningModal" ng-click="clearVolunteer()">
-            <i class="fa fa-fw fa-plus"></i> Add volunteer
+        <button type="button" class="btn btn-success ng-binding" ng-click="addScreening()">
+            <i class="fa fa-fw fa-plus"></i> {{msg('bookingApp.screening.addScreening')}}
         </button>
     </div>
 
-    <div>
-        <table id="volunteers"><tr><td></td></tr></table>
+    <div class="booking-app">
+        <table id="screenings" screening-grid><tr><td></td></tr></table>
         <div id="pager"></div>
     </div>
 
-    <div ng-include="'../booking-app/resources/partials/modals/addScreeningModal.html'"></div>
+    <div ng-include="'../booking-app/resources/partials/modals/screeningModal.html'"></div>
 </div>

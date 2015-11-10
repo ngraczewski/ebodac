@@ -8,13 +8,13 @@ public final class ScreeningValidator {
 
     public static void validateForAdd(ScreeningDto screeningDto) {
         validate(screeningDto);
-        Validate.isTrue(screeningDto.getVolunteerId() == null);
-        Validate.notEmpty(screeningDto.getVolunteerName());
+        Validate.isTrue(screeningDto.getVolunteerId() == null, "Volunteer ID should not be set when adding new " +
+                "screening!");
     }
 
     public static void validateForUpdate(ScreeningDto screeningDto) {
         validate(screeningDto);
-        Validate.notEmpty(screeningDto.getVolunteerId());
+        Validate.notEmpty(screeningDto.getVolunteerId(), "Volunteer ID cannot be null or empty!");
     }
 
     private static void validate(ScreeningDto screeningDto) {
@@ -22,6 +22,7 @@ public final class ScreeningValidator {
         Validate.notEmpty(screeningDto.getDate(), "Screening date cannot be null or empty!");
         Validate.notEmpty(screeningDto.getStartTime(), "Screening start time cannot be null or empty!");
         Validate.notEmpty(screeningDto.getEndTime(), "Screening end time cannot be null or empty!");
+        Validate.notEmpty(screeningDto.getVolunteerName(), "Volunteer name cannot be null or empty!");
         validateEndTime(screeningDto.getStartTime(), screeningDto.getEndTime());
     }
 

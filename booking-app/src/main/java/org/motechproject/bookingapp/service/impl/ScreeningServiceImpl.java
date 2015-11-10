@@ -92,6 +92,7 @@ public class ScreeningServiceImpl implements ScreeningService {
 
         Validate.notNull(screening, String.format("Screening with id \"%s\" doesn't exist!", screeningId));
 
+        screening.getVolunteer().setName(screeningDto.getVolunteerName());
         screening.setDate(LocalDate.parse(screeningDto.getDate()));
         screening.setStartTime(Time.valueOf(screeningDto.getStartTime()));
         screening.setEndTime(Time.valueOf(screeningDto.getEndTime()));

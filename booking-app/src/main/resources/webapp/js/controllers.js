@@ -1,17 +1,25 @@
 (function() {
     'use strict';
 
-    /* Controllers */
     var controllers = angular.module('bookingApp.controllers', []);
-    controllers.controller('BookingAppScreeningCtrl', function ($scope, Volunteers, Screenings, Sites) {
 
-        $scope.newScreening = {};
-        $scope.selectedSite = {};
-        $scope.sites = {};
+    controllers.controller('BAScreeningCtrl', function ($scope, $timeout, Screenings, Sites) {
 
-        Sites.query().$promise.then(function (result) {
-            $scope.sites = result;
-        });
+        $scope.sites = Sites.query();
+
+        $scope.newForm = function(type) {
+            $scope.form = {};
+            $scope.form.type = type;
+            $scope.form.screeningDto = {};
+        };
+
+        $scope.reloadSelects = function() {
+            $timeout(function() {
+                $('#siteSelect').trigger('change');
+                $('#clinicSelect').trigger('change');
+                $('#roomSelect').trigger('change');
+            });
+        };
 
         $scope.findById = function(list, id) {
             var i, parsedId = parseInt(id);
@@ -25,90 +33,37 @@
             return undefined;
         };
 
-        $scope.getClinics = function() {
-            return $scope.selectedSite.clinics;
-        };
-
-        $scope.createButton = function() {
-            return '<button type="button" class="btn btn-primary btn-sm ng-binding"><i class="fa fa-fw fa-print"></i></button>';
-        };
-
-        $scope.timeFormatter = function(time) {
-            return time.hour + ":" + time.minute;
-        };
-
-        $scope.localDateFormatter = function(date) {
-            return date[2] + "." + date[1] + "." + date[0];
-        };
-
-        $("#volunteers").jqGrid({
-            url: "../booking-app/screenings",
-            datatype: "json",
-            mtype: "GET",
-            colNames: ["ID", "Volunteer name", "Clinic", "Date", "Start Time", "End Time", "Room", ""],
-            colModel: [
-                { name: "id" },
-                { name: "volunteer.name" },
-                { name: "clinic.location" },
-                { name: "date", formatter: $scope.localDateFormatter},
-                { name: "startTime", formatter: $scope.timeFormatter},
-                { name: "endTime", formatter: $scope.timeFormatter},
-                { name: "room.number"},
-                { name: "print", align: "center", sortable: false, width: 40}
-            ],
-            gridComplete: function(){
-                    var ids = jQuery("#volunteers").getDataIDs();
-                    for(var i=0;i<ids.length;i++){
-                        jQuery("#volunteers").setRowData(ids[i],{print: $scope.createButton()})
-                    }
-                },
-            pager: "#pager",
-            rowNum: 10,
-            rowList: [10, 20, 30],
-            sortname: null,
-            sortorder: "desc",
-            viewrecords: true,
-            gridview: true,
-            loadOnce: false
-        });
-    });
-
-    controllers.controller('BANewScreeningCtrl', function ($scope, Sites, Screenings) {
-
-        $scope.clearForm = function() {
-            $scope.$parent.newScreening = {};
-        };
-
-        $('#addVolunteerModal').on('hidden.bs.modal', function () {
-            $scope.clearForm();
-        });
-
         $scope.addScreening = function() {
+            $scope.newForm("add");
+            $('#screeningModal').modal('show');
+            $scope.reloadSelects();
+        };
 
-            var screeningDto = {};
-            screeningDto.id = $scope.$parent.newScreening.id;
-            screeningDto.clinicId = $scope.$parent.newScreening.clinic.id;
-            screeningDto.roomId = $scope.$parent.newScreening.room.id;
-            screeningDto.volunteerName = $scope.$parent.newScreening.volunteerName;
-            screeningDto.volunteerId = $scope.$parent.newScreening.volunteerId;
-            screeningDto.date = $scope.$parent.newScreening.date;
-            screeningDto.startTime = $scope.$parent.newScreening.startTime;
-            screeningDto.endTime = $scope.$parent.newScreening.endTime;
+        $scope.editScreening = function(id) {
+            $scope.newForm("edit");
+            $scope.form.screeningDto = Screenings.get({id: id}, function() {
+                $scope.reloadSelects();
+                $('#screeningModal').modal('show');
+            });
+        };
 
-            Screenings.addOrUpdate(screeningDto,
+        $scope.saveScreening = function() {
+            Screenings.addOrUpdate($scope.form.screeningDto,
                 function success() {
-                    $("#volunteers").trigger('reloadGrid');
-                    $scope.$parent.newScreening = null;
+                    $("#screenings").trigger('reloadGrid');
+                    $scope.form.screeningDto = undefined;
                 });
         };
 
         $scope.formIsFilled = function() {
-            return $scope.$parent.newScreening.volunteerName
-                && $scope.$parent.newScreening.date
-                && $scope.$parent.newScreening.startTime
+            return $scope.form
+                && $scope.form.screeningDto
+                && $scope.form.screeningDto.volunteerName
+                && $scope.form.screeningDto.date
+                && $scope.form.screeningDto.startTime
                 && $scope.isValidEndTime() === true
-                && $scope.$parent.newScreening.clinic
-                && $scope.$parent.newScreening.room;
+                && $scope.form.screeningDto.clinicId
+                && $scope.form.screeningDto.roomId;
         };
 
         $scope.parseTime = function(string) {
@@ -127,8 +82,13 @@
         };
 
         $scope.isValidEndTime = function() {
-            var startTime = $scope.parseTime($scope.$parent.newScreening.startTime),
-                endTime = $scope.parseTime($scope.$parent.newScreening.endTime);
+
+            if (!$scope.form.screeningDto) {
+                return undefined;
+            }
+
+            var startTime = $scope.parseTime($scope.form.screeningDto.startTime),
+                endTime = $scope.parseTime($scope.form.screeningDto.endTime);
 
             if (startTime === undefined || endTime === undefined) {
                 return undefined;
@@ -144,7 +104,5 @@
 
             return startTime.hours < endTime.hours;
         }
-
     });
-
 }());
