@@ -1,14 +1,19 @@
 package org.motechproject.bookingapp.domain;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
-@Entity
+@Entity(maxFetchDepth = 2)
 public class Room extends MdsEntity {
 
     @Field(required = true)
     private String number;
+
+    @Field(required = true)
+    @JsonBackReference
+    private Clinic clinic;
 
     @Field(defaultValue = "1")
     private Integer maxPatients;
@@ -42,6 +47,30 @@ public class Room extends MdsEntity {
 
     @Field
     private Integer maxLongTestThirdFollowUpVisits;
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public Clinic getClinic() {
+        return clinic;
+    }
+
+    public void setClinic(Clinic clinic) {
+        this.clinic = clinic;
+    }
+
+    public Integer getMaxPatients() {
+        return maxPatients;
+    }
+
+    public void setMaxPatients(Integer maxPatients) {
+        this.maxPatients = maxPatients;
+    }
 
     public Integer getMaxScreeningVisits() {
         return maxScreeningVisits;
