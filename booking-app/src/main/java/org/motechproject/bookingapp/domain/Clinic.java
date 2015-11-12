@@ -1,13 +1,15 @@
 package org.motechproject.bookingapp.domain;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
+import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
+import javax.jdo.annotations.Persistent;
 import java.util.List;
 
-@Entity
+@Entity(maxFetchDepth = 2)
 public class Clinic extends MdsEntity {
 
     @Field(required = true)
@@ -18,6 +20,8 @@ public class Clinic extends MdsEntity {
     private String location;
 
     @Field
+    @Cascade(delete = true)
+    @Persistent(mappedBy = "clinic")
     private List<Room> rooms;
 
     public Site getSite() {

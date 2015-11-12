@@ -76,7 +76,6 @@ public class ScreeningServiceImpl implements ScreeningService {
         screening.setDate(LocalDate.parse(screeningDto.getDate()));
         screening.setStartTime(Time.valueOf(screeningDto.getStartTime()));
         screening.setEndTime(Time.valueOf(screeningDto.getEndTime()));
-        screening.setClinic(clinicDataService.findById(Long.parseLong(screeningDto.getClinicId())));
         screening.setRoom(roomDataService.findById(Long.parseLong(screeningDto.getRoomId())));
 
         return screeningDataService.create(screening).toDto();
@@ -96,7 +95,6 @@ public class ScreeningServiceImpl implements ScreeningService {
         screening.setDate(LocalDate.parse(screeningDto.getDate()));
         screening.setStartTime(Time.valueOf(screeningDto.getStartTime()));
         screening.setEndTime(Time.valueOf(screeningDto.getEndTime()));
-        screening.setClinic(clinicDataService.findById(Long.parseLong(screeningDto.getClinicId())));
         screening.setRoom(roomDataService.findById(Long.parseLong(screeningDto.getRoomId())));
 
         return screeningDataService.update(screening).toDto();
