@@ -1,6 +1,9 @@
 package org.motechproject.bookingapp.domain;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.joda.time.LocalDate;
+import org.motechproject.bookingapp.util.CustomDateSerializer;
+import org.motechproject.bookingapp.util.CustomTimeSerializer;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
@@ -17,12 +20,15 @@ public class Screening extends MdsEntity {
     private Volunteer volunteer;
 
     @Field(required = true)
+    @JsonSerialize(using = CustomDateSerializer.class)
     private LocalDate date;
 
     @Field(required = true)
+    @JsonSerialize(using = CustomTimeSerializer.class)
     private Time startTime;
 
     @Field(required = true)
+    @JsonSerialize(using = CustomTimeSerializer.class)
     private Time endTime;
 
     public ScreeningDto toDto() {

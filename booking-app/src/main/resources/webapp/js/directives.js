@@ -31,14 +31,6 @@
             return '<button type="button" class="btn btn-primary btn-sm ng-binding"><i class="fa fa-fw fa-print"></i></button>';
         };
 
-        timeFormatter = function(time) {
-            return time.hour + ":" + time.minute;
-        };
-
-        localDateFormatter = function(date) {
-            return date[2] + "." + date[1] + "." + date[0];
-        };
-
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
@@ -56,9 +48,9 @@
                         { name: "id" },
                         { name: "volunteer.name" },
                         { name: "clinic.location" },
-                        { name: "date", formatter: localDateFormatter},
-                        { name: "startTime", formatter: timeFormatter},
-                        { name: "endTime", formatter: timeFormatter},
+                        { name: "date" },
+                        { name: "startTime" },
+                        { name: "endTime" },
                         { name: "room.number"},
                         { name: "print", align: "center", sortable: false, width: 40}
                     ],
