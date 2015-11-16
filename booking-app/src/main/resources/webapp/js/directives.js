@@ -23,13 +23,32 @@
         };
     });
 
+    directives.directive('gridReloadTrigger', function() {
+        return {
+            restrict: 'A',
+            require: 'ngModel',
+            link: function(scope, element, attrs, ngModel) {
+                scope.$watch("$parent." + attrs.ngModel, function () {
+                    $("#screenings").trigger('reloadGrid');
+                });
+            }
+        };
+    });
+
     directives.directive('screeningGrid', function () {
 
-        var createButton, timeFormatter, localDateFormatter;
-
-        createButton = function() {
-            return '<button type="button" class="btn btn-primary btn-sm ng-binding"><i class="fa fa-fw fa-print"></i></button>';
+        function createButton() {
+            return '<button type="button" class="btn btn-primary btn-sm ng-binding">'
+                 + '<i class="fa fa-fw fa-print"></i>'
+                 + '</button>';
         };
+
+        function handleUndefined(value) {
+            if (value == undefined) {
+                value = "";
+            }
+            return value;
+        }
 
         return {
             restrict: 'A',
@@ -68,12 +87,22 @@
                     viewrecords: true,
                     gridview: true,
                     loadOnce: false,
+                    postData: {
+                        startDate: function() {
+                            return handleUndefined(scope.selectedFilter.startDate);
+                        },
+                        endDate: function() {
+                            return handleUndefined(scope.selectedFilter.endDate);
+                        },
+                        dateFilter: function() {
+                            return handleUndefined(scope.selectedFilter.dateFilter);
+                        }
+                    },
                     beforeSelectRow: function() {
                         return false;
                     },
                     onCellSelect: scope.editScreening
-                    }
-                );
+                });
 
             }
         };

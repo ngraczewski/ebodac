@@ -1,10 +1,16 @@
 package org.motechproject.bookingapp.web.domain;
 
+import org.motechproject.bookingapp.domain.DateFilter;
+
 public class GridSettings {
+
     private Integer rows;
     private Integer page;
     private String sidx;
     private String sort;
+    private DateFilter dateFilter;
+    private String startDate;
+    private String endDate;
 
     public Integer getRows() {
         return rows;
@@ -36,5 +42,29 @@ public class GridSettings {
 
     public void setSort(String sort) {
         this.sort = sort;
+    }
+
+    public DateFilter getDateFilter() {
+        return dateFilter;
+    }
+
+    public void setDateFilter(DateFilter dateFilter) {
+        this.dateFilter = dateFilter;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 }

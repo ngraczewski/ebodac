@@ -12,6 +12,7 @@ import org.motechproject.bookingapp.repository.SiteDataService;
 import org.motechproject.bookingapp.repository.VolunteerDataService;
 import org.motechproject.bookingapp.service.ScreeningService;
 import org.motechproject.bookingapp.util.ScreeningValidator;
+import org.motechproject.commons.api.Range;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.mds.query.QueryParams;
 import org.motechproject.mds.util.Order;
@@ -40,22 +41,23 @@ public class ScreeningServiceImpl implements ScreeningService {
     private RoomDataService roomDataService;
 
     @Override
-    public List<Screening> getScreenings(int page, int pageSize, String sortColumn, String sortDirectory) {
+    @Transactional
+    public List<Screening> getScreenings(int page, int pageSize, String sortColumn, String sortDirection, Range dateRange) {
 
         QueryParams queryParams;
 
-        if (sortColumn != null && sortDirectory != null) {
-            queryParams = new QueryParams(page, pageSize, new Order(sortColumn, sortDirectory));
+        if (sortColumn != null && sortDirection != null) {
+            queryParams = new QueryParams(page, pageSize, new Order(sortColumn, sortDirection));
         } else {
             queryParams = new QueryParams(page, pageSize);
         }
 
-        return screeningDataService.retrieveAll(queryParams);
+        return screeningDataService.findByDate(dateRange, queryParams);
     }
 
     @Override
-    public long getTotalInstancesCount() {
-        return screeningDataService.count();
+    public long countScreeningsForDateRange(Range<LocalDate> range) {
+        return screeningDataService.countFindByDate(range);
     }
 
     @Override

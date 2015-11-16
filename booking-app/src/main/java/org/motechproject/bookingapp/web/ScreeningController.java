@@ -1,9 +1,15 @@
 package org.motechproject.bookingapp.web;
 
+
+import org.apache.commons.lang3.StringUtils;
+import org.joda.time.LocalDate;
+import org.motechproject.bookingapp.domain.DateFilter;
 import org.motechproject.bookingapp.domain.Screening;
 import org.motechproject.bookingapp.domain.ScreeningDto;
 import org.motechproject.bookingapp.service.ScreeningService;
 import org.motechproject.bookingapp.web.domain.GridSettings;
+import org.motechproject.bookingapp.web.domain.StringResponse;
+import org.motechproject.commons.api.Range;
 import org.motechproject.mds.web.domain.Records;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +32,8 @@ public class ScreeningController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ScreeningController.class);
 
+    private DateFilter defaultDateFilter = DateFilter.TODAY;
+
     @Autowired
     private ScreeningService screeningService;
 
@@ -38,10 +46,30 @@ public class ScreeningController {
         String sortColumn = settings.getSidx();
         String sortOrder = settings.getSort();
 
-        List<Screening> screenings = screeningService.getScreenings(page, pageSize, sortColumn, sortOrder);
-        long recordCount = screeningService.getTotalInstancesCount();
+        if (settings.getDateFilter() != null) {
+            defaultDateFilter = settings.getDateFilter();
+        }
 
+        Range<LocalDate> dateRange = defaultDateFilter.getRange();
 
+        if (defaultDateFilter == DateFilter.DATE_RANGE) {
+            LocalDate startDate = null;
+            LocalDate endDate = null;
+
+            if (StringUtils.isNotBlank(settings.getStartDate())) {
+                startDate = LocalDate.parse(settings.getStartDate());
+            }
+
+            if (StringUtils.isNotBlank(settings.getEndDate())) {
+                endDate = LocalDate.parse(settings.getEndDate());
+            }
+
+            dateRange = new Range<>(startDate, endDate);
+        }
+
+        List<Screening> screenings = screeningService.getScreenings(page, pageSize, sortColumn, sortOrder, dateRange);
+
+        long recordCount = screeningService.countScreeningsForDateRange(dateRange);
         int rowCount = (int) Math.ceil(recordCount / (double) pageSize);
 
         return new Records<>(page, rowCount, (int) recordCount, screenings);
@@ -57,6 +85,12 @@ public class ScreeningController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public void addOrUpdateScreening(@RequestBody ScreeningDto screening) {
         screeningService.addOrUpdate(screening);
+    }
+
+    @RequestMapping(value = "/getDefaultDateFilter")
+    @ResponseBody
+    public StringResponse getDefaultDateFilter() {
+        return new StringResponse(defaultDateFilter.toString());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

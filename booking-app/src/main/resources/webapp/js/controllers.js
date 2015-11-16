@@ -6,6 +6,37 @@
     controllers.controller('BAScreeningCtrl', function ($scope, $timeout, Screenings, Sites) {
 
         $scope.sites = Sites.query();
+        $scope.selectedFilter = {};
+
+        $scope.filters = [{
+            name: $scope.msg('bookingApp.screening.today'),
+            dateFilter: "TODAY"
+        },{
+            name: $scope.msg('bookingApp.screening.tomorrow'),
+            dateFilter: "TOMORROW"
+        },{
+            name: $scope.msg('bookingApp.screening.thisWeek'),
+            dateFilter: "THIS_WEEK"
+        },{
+            name: $scope.msg('bookingApp.screening.dateRange'),
+            dateFilter: "DATE_RANGE"
+        }];
+
+        $scope.selectFilter = function(value) {
+            $scope.selectedFilter = $scope.filters[value];
+            if (value !== 3) {
+                $("#screenings").trigger('reloadGrid');
+            }
+        };
+
+        Screenings.getDefaultFilter({}, function (value) {
+            var i;
+            for (i = 0; i < $scope.filters.length; i += 1) {
+                if ($scope.filters[i].dateFilter == value.response) {
+                    $scope.selectFilter(i);
+                }
+            }
+        });
 
         $scope.newForm = function(type) {
             $scope.form = {};
