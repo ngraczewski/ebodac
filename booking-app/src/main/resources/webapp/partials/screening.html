@@ -1,14 +1,30 @@
-<div class="row inside booking-app">
-    <div class="row inside">
+<div class="booking-app">
+    <div class="row inside form-inline">
         <button type="button" class="btn btn-success ng-binding" ng-click="addScreening()">
             <i class="fa fa-fw fa-plus"></i> {{msg('bookingApp.screening.addScreening')}}
         </button>
+        <div class="btn-group">
+            <button type="button" class="btn btn-default">{{selectedFilter.name}}</button>
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" range-setter>
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+                <li ng-repeat="filter in filters"><a ng-click="selectFilter($index)">{{filter.name}}</a></li>
+            </ul>
+        </div>
+        <div class="form-group" ng-if="selectedFilter === filters[3]">
+            <div class="input-group">
+                <span class="left input-group-addon">{{msg('bookingApp.screening.from')}}</span>
+                <input type="text" class="form-control" mds-date-picker grid-reload-trigger placeholder="{{msg('bookingApp.screening.datePlaceholder')}}" ng-model="selectedFilter.startDate">
+                <span class="middle input-group-addon">{{msg('bookingApp.screening.to')}}</span>
+                <input type="text" class="form-control" mds-date-picker grid-reload-trigger placeholder="{{msg('bookingApp.screening.datePlaceholder')}}" ng-model="selectedFilter.endDate">
+            </div>
+        </div>
     </div>
-
-    <div class="booking-app">
+    <div class="row inside booking-app">
         <table id="screenings" screening-grid><tr><td></td></tr></table>
         <div id="pager"></div>
     </div>
-
     <div ng-include="'../booking-app/resources/partials/modals/screeningModal.html'"></div>
 </div>

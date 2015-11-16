@@ -6,9 +6,13 @@
     display: none;
 }
 
-.middle-span {
+.middle.input-group-addon {
     border-left: 0px;
     border-right: 0px;
+}
+
+.inline-table {
+    display: inline-table;
 }
 
 #ui-datepicker-div {

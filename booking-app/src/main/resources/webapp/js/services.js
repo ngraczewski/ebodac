@@ -12,7 +12,8 @@
     services.factory('Screenings', function($resource) {
         return $resource('../booking-app/screenings', {}, {
             'addOrUpdate': { url: '../booking-app/screenings/new', method: 'POST'},
-            'get': {url: '../booking-app/screenings/:id', method: 'GET'}
+            'get': {url: '../booking-app/screenings/:id', method: 'GET'},
+            'getDefaultFilter': {url: '../booking-app/screenings/getDefaultDateFilter', method: 'GET'}
         });
     });
 
