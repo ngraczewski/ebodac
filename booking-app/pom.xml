@@ -13,6 +13,11 @@
     <dependencies>
         <dependency>
             <groupId>org.motechproject</groupId>
+            <artifactId>ebodac</artifactId>
+            <version>1.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
             <artifactId>motech-platform-dataservices-web</artifactId>
             <version>${motech.version}</version>
         </dependency>
