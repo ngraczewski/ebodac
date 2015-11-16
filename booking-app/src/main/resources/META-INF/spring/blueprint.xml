@@ -15,5 +15,9 @@
                     interface="org.motechproject.bookingapp.repository.SiteDataService" />
     <osgi:reference id="roomDataService"
                     interface="org.motechproject.bookingapp.repository.RoomDataService" />
+    <osgi:reference id="visitScheduleOffsetDataService"
+                    interface="org.motechproject.bookingapp.repository.VisitScheduleOffsetDataService" />
+
+    <osgi:service ref="visitScheduleOffsetService" interface="org.motechproject.bookingapp.service.VisitScheduleOffsetService" />
 
 </beans>
