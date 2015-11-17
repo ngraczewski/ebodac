@@ -168,4 +168,66 @@
             }
         }
     });
+
+    controllers.controller('BookingAppClinicVisitScheduleCtrl', function ($scope, $http) {
+        $scope.subjects = [];
+        $scope.selectedSubject = {};
+        $scope.primeVac = {};
+        $scope.visitPlannedDates = {};
+
+        $http.get('../booking-app/schedule/getSubjects')
+        .success(function(data) {
+            $scope.subjects = data;
+        });
+
+        $scope.subjectChanged = function() {
+            if ($scope.checkSubject()) {
+                $http.get('../booking-app/schedule/getPrimeVacDate/' + $scope.selectedSubject.subjectId)
+                .success(function(data) {
+                    $scope.primeVac.date = data;
+                });
+            }
+        }
+
+        $scope.$watch('primeVac.date', function(newVal, oldVal) {
+            if ($scope.checkSubject()) {
+                $http.get('../booking-app/schedule/getPlannedDates/' + $scope.selectedSubject.subjectId + '/' + newVal)
+                .success(function(data) {
+                    $scope.visitPlannedDates = data;
+                })
+                .error(function(response) {
+                    motechAlert('bookingApp.schedule.plannedDates.calculate.error', 'bookingApp.schedule.error', response);
+                });
+            }
+        });
+
+        $scope.save = function() {
+            if ($scope.checkSubjectAndPrimeVacDate()) {
+                $http.get('../booking-app/schedule/savePlannedDates/' + $scope.selectedSubject.subjectId + '/' + $scope.primeVac.date)
+                .success(function(response) {
+                    motechAlert('bookingApp.schedule.plannedDates.saved', 'bookingApp.schedule.saved.success');
+                })
+                .error(function(response) {
+                    motechAlert('bookingApp.schedule.plannedDates.save.error', 'bookingApp.schedule.error', response);
+                });
+            }
+        }
+
+        $scope.print = function() {
+        }
+
+        $scope.cancel = function() {
+            $scope.subjectChanged();
+        }
+
+        $scope.checkSubject = function() {
+            return $scope.selectedSubject !== undefined && $scope.selectedSubject !== null && $scope.selectedSubject.subjectId !== undefined;
+        }
+
+        $scope.checkSubjectAndPrimeVacDate = function() {
+            return $scope.checkSubject() && $scope.primeVac.date !== undefined && $scope.primeVac.date !== null && $scope.primeVac.date !== "";
+        }
+
+    });
+
 }());

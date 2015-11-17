@@ -46,3 +46,7 @@
     color: #3c763d;
 }
 
+.table-centered tbody tr td, .table-centered thead tr th {
+    text-align: center;
+    vertical-align: middle;
+}
