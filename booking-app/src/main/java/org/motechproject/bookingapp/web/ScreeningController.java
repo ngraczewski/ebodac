@@ -82,9 +82,9 @@ public class ScreeningController {
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.POST, consumes = "application/json")
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public void addOrUpdateScreening(@RequestBody ScreeningDto screening) {
-        screeningService.addOrUpdate(screening);
+    @ResponseBody
+    public Screening addOrUpdateScreening(@RequestBody ScreeningDto screening) {
+        return screeningService.addOrUpdate(screening);
     }
 
     @RequestMapping(value = "/getDefaultDateFilter")

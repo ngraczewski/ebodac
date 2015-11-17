@@ -62,7 +62,7 @@ public class ScreeningServiceImpl implements ScreeningService {
     }
 
     @Override
-    public ScreeningDto addOrUpdate(ScreeningDto screeningDto) {
+    public Screening addOrUpdate(ScreeningDto screeningDto) {
         if (screeningDto.getId() != null) {
             return update(screeningDto);
         }
@@ -70,7 +70,7 @@ public class ScreeningServiceImpl implements ScreeningService {
     }
 
     @Override
-    public ScreeningDto add(ScreeningDto screeningDto) {
+    public Screening add(ScreeningDto screeningDto) {
 
         ScreeningValidator.validateForAdd(screeningDto);
 
@@ -78,11 +78,11 @@ public class ScreeningServiceImpl implements ScreeningService {
         screening.setVolunteer(volunteerDataService.create(new Volunteer(screeningDto.getVolunteerName())));
         checkNumberOfPatientsAndSetScreeningData(screeningDto, screening);
 
-        return screeningDataService.create(screening).toDto();
+        return screeningDataService.create(screening);
     }
 
     @Override
-    public ScreeningDto update(ScreeningDto screeningDto) {
+    public Screening update(ScreeningDto screeningDto) {
 
         ScreeningValidator.validateForUpdate(screeningDto);
 
@@ -94,7 +94,7 @@ public class ScreeningServiceImpl implements ScreeningService {
         screening.getVolunteer().setName(screeningDto.getVolunteerName());
         checkNumberOfPatientsAndSetScreeningData(screeningDto, screening);
 
-        return screeningDataService.update(screening).toDto();
+        return screeningDataService.update(screening);
     }
 
     @Override

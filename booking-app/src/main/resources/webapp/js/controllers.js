@@ -3,9 +3,10 @@
 
     var controllers = angular.module('bookingApp.controllers', []);
 
-    controllers.controller('BAScreeningCtrl', function ($scope, $timeout, Screenings, Sites) {
+    controllers.controller('BAScreeningCtrl', function ($scope, $timeout, $http, Screenings, Sites) {
 
         $scope.sites = Sites.query();
+        $scope.screeningForPrint = {};
         $scope.selectedFilter = {};
 
         $scope.filters = [{
@@ -80,8 +81,9 @@
 
         $scope.saveScreening = function() {
             Screenings.addOrUpdate($scope.form.screeningDto,
-                function success() {
+                function success(data) {
                     $("#screenings").trigger('reloadGrid');
+                    $scope.screeningForPrint = data;
                     $scope.form.screeningDto = undefined;
                 });
         };
@@ -134,6 +136,36 @@
             }
 
             return startTime.hours < endTime.hours;
+        }
+
+        $scope.printRow = function(id) {
+
+            if(id >= 0) {
+                var rowData = jQuery("#screenings").jqGrid ('getRowData', id);
+                var participantId = rowData['id'];
+                var participantName = rowData['volunteer.name'];
+                var clinic = rowData['site.siteId'] + " - " + rowData['clinic.location'] + " - " + rowData["room.number"];
+                var date = rowData['date'];
+                var startTime = rowData['startTime'];
+            } else {
+                var participantId = $scope.screeningForPrint.volunteer.id;
+                var participantName =  $scope.screeningForPrint.volunteer.name;
+                var clinic = $scope.screeningForPrint.site.siteId + " - " + $scope.screeningForPrint.clinic.location + " - " + $scope.screeningForPrint.room.number;
+                var date = $scope.screeningForPrint.date;
+                var startTime = $scope.screeningForPrint.startTime;
+            }
+
+            var winPrint = window.open("../booking-app/resources/partials/volunteerCardScreening.html");
+            winPrint.onload = function() {
+                $('#participantId', winPrint.document).html(participantId);
+                $('#participantName', winPrint.document).html(participantName);
+                $('#location', winPrint.document).html(clinic);
+                $('#screeningDate', winPrint.document).html(date);
+                $('#apptTime', winPrint.document).html(startTime);
+
+                winPrint.focus();
+                winPrint.print();
+            }
         }
     });
 }());

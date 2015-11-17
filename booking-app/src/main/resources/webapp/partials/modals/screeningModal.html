@@ -71,7 +71,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-primary ng-binding">
+                        <button type="button" class="btn btn-primary ng-binding" ng-click="printRow(-1)">
                             <i class="fa fa-fw fa-print"></i> {{msg('bookingApp.screening.printCard')}}
                         </button>
                         <button ng-if="form.type == 'add'" type="button" class="btn btn-success ng-binding" ng-click="addScreening()">
