@@ -36,7 +36,7 @@ public class Screening extends MdsEntity {
         dto.setId(getId().toString());
         dto.setRoomId(room.getId().toString());
         dto.setClinicId(getRoom().getClinic().getId().toString());
-        dto.setSiteId(getClinic().getSite().getId().toString());
+        dto.setSiteId(getSite().getId().toString());
         dto.setVolunteerId(volunteer.getId().toString());
         dto.setVolunteerName(volunteer.getName());
         dto.setDate(date.toString());
@@ -49,6 +49,14 @@ public class Screening extends MdsEntity {
     public Clinic getClinic() {
         if (room != null) {
             return room.getClinic();
+        }
+        return null;
+    }
+
+    @Ignore
+    public Site getSite() {
+        if (room != null) {
+            return room.getClinic().getSite();
         }
         return null;
     }

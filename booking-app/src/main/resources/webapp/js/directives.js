@@ -35,12 +35,11 @@
         };
     });
 
-    directives.directive('screeningGrid', function () {
+    directives.directive('screeningGrid', function ($compile) {
 
-        function createButton() {
-            return '<button type="button" class="btn btn-primary btn-sm ng-binding">'
-                 + '<i class="fa fa-fw fa-print"></i>'
-                 + '</button>';
+        function createButton(id) {
+            return '<button type="button" class="btn btn-primary btn-sm ng-binding printBtn" ng-click="printRow(' +
+                               id + ')"><i class="fa fa-fw fa-print"></i></button>';
         };
 
         function handleUndefined(value) {
@@ -62,7 +61,7 @@
                     colNames: ["ID", scope.msg("bookingApp.screening.volunteerName"),
                         scope.msg("bookingApp.screening.clinic"), scope.msg("bookingApp.screening.date"),
                         scope.msg("bookingApp.screening.startTime"), scope.msg("bookingApp.screening.endTime"),
-                        scope.msg("bookingApp.screening.room"), ""],
+                        scope.msg("bookingApp.screening.room"), scope.msg("bookingApp.screening.site"),""],
                     colModel: [
                         { name: "id" },
                         { name: "volunteer.name" },
@@ -71,13 +70,15 @@
                         { name: "startTime" },
                         { name: "endTime" },
                         { name: "room.number"},
+                        { name: "site.siteId"},
                         { name: "print", align: "center", sortable: false, width: 40}
                     ],
                     gridComplete: function(){
                             var ids = elem.getDataIDs();
                             for(var i=0;i<ids.length;i++){
-                                elem.setRowData(ids[i],{print: createButton()})
+                                elem.setRowData(ids[i],{print: createButton(ids[i])})
                             }
+                            $compile($('.printBtn'))(scope);
                         },
                     pager: "#pager",
                     rowNum: 10,

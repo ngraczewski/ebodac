@@ -13,11 +13,11 @@ public interface ScreeningService {
 
     long countScreeningsForDateRange(Range<LocalDate> dateRange);
 
-    ScreeningDto addOrUpdate(ScreeningDto screeningDto);
+    Screening addOrUpdate(ScreeningDto screeningDto);
 
-    ScreeningDto add(ScreeningDto screeningDto);
+    Screening add(ScreeningDto screeningDto);
 
-    ScreeningDto update(ScreeningDto screeningDto);
+    Screening update(ScreeningDto screeningDto);
 
     ScreeningDto getScreeningById(Long id);
 
