@@ -12,13 +12,13 @@ table {
 }
 
 th {
-    height: 50px;
+    height: 30px;
 }
 
 img {
-    margin: 20px;
+    margin: 15px;
 }
 
 th, td {
-    padding: 15px;
+    padding: 5px;
 }
