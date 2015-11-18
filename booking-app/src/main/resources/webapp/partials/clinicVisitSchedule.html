@@ -1,2 +1,75 @@
 <div class="row">
+
+    <table class="table table-bundles table-bordered table-striped table-lightblue table-condensed table-centered margin-before2">
+        <thead>
+        <tr>
+            <th>{{msg('bookingApp.schedule.subjectId')}}</th>
+            <th>{{msg('bookingApp.schedule.subjectName')}}</th>
+            <th>{{msg('bookingApp.schedule.primeVac')}}</th>
+            <th>{{msg('bookingApp.schedule.primeVacFollowup')}}</th>
+            <th>{{msg('bookingApp.schedule.boostVacDay')}}</th>
+            <th>{{msg('bookingApp.schedule.boostVacFirstFollowup')}}</th>
+            <th>{{msg('bookingApp.schedule.boostVacSecondFollowup')}}</th>
+            <th>{{msg('bookingApp.schedule.boostVacThirdFollowup')}}</th>
+            <th>{{msg('bookingApp.schedule.FirstLongTermFollowup')}}</th>
+            <th>{{msg('bookingApp.schedule.SecondLongTermFollowup')}}</th>
+            <th>{{msg('bookingApp.schedule.ThirdLongTermFollowup')}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="col-md-1">
+                <select class="form-control" ui-select2 id="subjectId" ng-model="selectedSubject" ng-change="subjectChanged()" ng-options="subject.subjectId for subject in subjects">
+                    <option value=""></option>
+                </select>
+            </td>
+            <td>
+                {{selectedSubject.name}}
+            </td>
+            <td ng-if="selectedSubject.primerVaccinationDate" class="col-md-1">
+                {{primeVac.date}}
+            </td>
+            <td ng-if="!selectedSubject.primerVaccinationDate" class="col-md-1">
+                <input type="text" class="form-control" mds-date-picker ng-model="primeVac.date">
+            </td>
+            <td>
+                {{visitPlannedDates.PRIME_VACCINATION_FOLLOW_UP_VISIT}}
+            </td>
+            <td>
+                {{visitPlannedDates.BOOST_VACCINATION_DAY}}
+            </td>
+            <td>
+                {{visitPlannedDates.BOOST_VACCINATION_FIRST_FOLLOW_UP_VISIT}}
+            </td>
+            <td>
+                {{visitPlannedDates.BOOST_VACCINATION_SECOND_FOLLOW_UP_VISIT}}
+            </td>
+            <td>
+                {{visitPlannedDates.BOOST_VACCINATION_THIRD_FOLLOW_UP_VISIT}}
+            </td>
+            <td>
+                {{visitPlannedDates.FIRST_LONG_TERM_FOLLOW_UP_VISIT}}
+            </td>
+            <td>
+                {{visitPlannedDates.SECOND_LONG_TERM_FOLLOW_UP_VISIT}}
+            </td>
+            <td>
+                {{visitPlannedDates.THIRD_LONG_TERM_FOLLOW_UP_VISIT}}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <button ng-if="!selectedSubject.primerVaccinationDate" type="button" class="btn btn-success" ng-disabled="!checkSubjectAndPrimeVacDate()" ng-click="save()">
+        <i class="fa fa-fw fa-save"></i> {{msg('bookingApp.schedule.save')}}
+    </button>
+
+    <button type="button" class="btn btn-primary" ng-disabled="!checkSubjectAndPrimeVacDate()" ng-click="print()">
+        <i class="fa fa-fw fa-print"></i> {{msg('bookingApp.schedule.print')}}
+    </button>
+
+    <button type="button" class="btn btn-default" ng-click="cancel()">
+        {{msg('bookingApp.schedule.cancel')}}
+    </button>
+
 </div>

@@ -6,8 +6,11 @@ import org.motechproject.ebodac.domain.Visit;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
-@Entity
+@Entity(maxFetchDepth = 3)
 public class VisitBookingDetails {
+
+    @Field
+    private Long id;
 
     @Field
     private LocalDate bookingPlannedDate;
@@ -26,6 +29,27 @@ public class VisitBookingDetails {
 
     @Field(required = true)
     private Visit visit;
+
+    public VisitBookingDetails() {
+    }
+
+    public VisitBookingDetails(LocalDate bookingPlannedDate, Visit visit) {
+        this.bookingPlannedDate = bookingPlannedDate;
+        this.visit = visit;
+    }
+
+    public VisitBookingDetails(Visit visit, LocalDate bookingActualDate) {
+        this.visit = visit;
+        this.bookingActualDate = bookingActualDate;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public LocalDate getBookingPlannedDate() {
         return bookingPlannedDate;

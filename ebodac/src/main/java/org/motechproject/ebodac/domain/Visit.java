@@ -27,6 +27,10 @@ public class Visit {
     public static final String SUBJECT_ADDRESS_PROPERTY_NAME = "subject.address";
     public static final String SUBJECT_PRIME_VACCINATION_DATE_PROPERTY_NAME = "subject.primerVaccinationDate";
 
+    @NonEditable(display = false)
+    @Field
+    private Long id;
+
     @NonEditable
     @Field(displayName = "Participant")
     private Subject subject;
@@ -50,6 +54,14 @@ public class Visit {
     @NonEditable(display = false)
     @Field
     private String owner;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     @JsonSerialize(using = CustomSubjectSerializer.class)
     public Subject getSubject() {
