@@ -214,6 +214,26 @@
         }
 
         $scope.print = function() {
+            if ($scope.checkSubjectAndPrimeVacDate()) {
+                var winPrint = window.open("../booking-app/resources/partials/visitScheduleCard.html");
+
+                winPrint.onload = function() {
+                    $('#subjectId', winPrint.document).html($scope.selectedSubject.subjectId);
+                    $('#subjectName', winPrint.document).html($scope.selectedSubject.name);
+                    $('#primeActualDate', winPrint.document).html($scope.primeVac.date);
+                    $('#primeVacFollowup', winPrint.document).html($scope.visitPlannedDates.PRIME_VACCINATION_FOLLOW_UP_VISIT);
+                    $('#boostVacDay', winPrint.document).html($scope.visitPlannedDates.BOOST_VACCINATION_DAY);
+                    $('#boostFirstFollowup', winPrint.document).html($scope.visitPlannedDates.BOOST_VACCINATION_FIRST_FOLLOW_UP_VISIT);
+                    $('#boostSecondFollowup', winPrint.document).html($scope.visitPlannedDates.BOOST_VACCINATION_SECOND_FOLLOW_UP_VISIT);
+                    $('#boostThirdFollowup', winPrint.document).html($scope.visitPlannedDates.BOOST_VACCINATION_THIRD_FOLLOW_UP_VISIT);
+                    $('#firstLongTerm', winPrint.document).html($scope.visitPlannedDates.FIRST_LONG_TERM_FOLLOW_UP_VISIT);
+                    $('#secondLongTerm', winPrint.document).html($scope.visitPlannedDates.SECOND_LONG_TERM_FOLLOW_UP_VISIT);
+                    $('#thirdLongTerm', winPrint.document).html($scope.visitPlannedDates.THIRD_LONG_TERM_FOLLOW_UP_VISIT);
+
+                    winPrint.focus();
+                    winPrint.print();
+                }
+            }
         }
 
         $scope.cancel = function() {
