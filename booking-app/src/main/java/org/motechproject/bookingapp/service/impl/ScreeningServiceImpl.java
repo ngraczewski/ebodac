@@ -6,6 +6,7 @@ import org.motechproject.bookingapp.domain.Clinic;
 import org.motechproject.bookingapp.domain.Screening;
 import org.motechproject.bookingapp.domain.ScreeningDto;
 import org.motechproject.bookingapp.domain.Volunteer;
+import org.motechproject.bookingapp.exception.LimitationExceededException;
 import org.motechproject.bookingapp.repository.ClinicDataService;
 import org.motechproject.bookingapp.repository.ScreeningDataService;
 import org.motechproject.bookingapp.repository.VolunteerDataService;
@@ -54,27 +55,27 @@ public class ScreeningServiceImpl implements ScreeningService {
     }
 
     @Override
-    public Screening addOrUpdate(ScreeningDto screeningDto) {
+    public Screening addOrUpdate(ScreeningDto screeningDto, Boolean ignoreLimitation) {
         if (screeningDto.getId() != null) {
-            return update(screeningDto);
+            return update(screeningDto, ignoreLimitation);
         }
-        return add(screeningDto);
+        return add(screeningDto, ignoreLimitation);
     }
 
     @Override
-    public Screening add(ScreeningDto screeningDto) {
+    public Screening add(ScreeningDto screeningDto, Boolean ignoreLimitation) {
 
         ScreeningValidator.validateForAdd(screeningDto);
 
         Screening screening = new Screening();
         screening.setVolunteer(volunteerDataService.create(new Volunteer(screeningDto.getVolunteerName())));
-        checkNumberOfPatientsAndSetScreeningData(screeningDto, screening);
+        checkNumberOfPatientsAndSetScreeningData(screeningDto, screening, ignoreLimitation);
 
         return screeningDataService.create(screening);
     }
 
     @Override
-    public Screening update(ScreeningDto screeningDto) {
+    public Screening update(ScreeningDto screeningDto, Boolean ignoreLimitation) {
 
         ScreeningValidator.validateForUpdate(screeningDto);
 
@@ -84,7 +85,7 @@ public class ScreeningServiceImpl implements ScreeningService {
         Validate.notNull(screening, String.format("Screening with id \"%s\" doesn't exist!", screeningId));
 
         screening.getVolunteer().setName(screeningDto.getVolunteerName());
-        checkNumberOfPatientsAndSetScreeningData(screeningDto, screening);
+        checkNumberOfPatientsAndSetScreeningData(screeningDto, screening, ignoreLimitation);
 
         return screeningDataService.update(screening);
     }
@@ -95,37 +96,43 @@ public class ScreeningServiceImpl implements ScreeningService {
         return screeningDataService.findById(id).toDto();
     }
 
-    private void checkNumberOfPatientsAndSetScreeningData(ScreeningDto screeningDto, Screening screening) {
+    private void checkNumberOfPatientsAndSetScreeningData(ScreeningDto screeningDto, Screening screening, Boolean ignoreLimitation) {
         Clinic clinic = clinicDataService.findById(Long.parseLong(screeningDto.getClinicId()));
         LocalDate date = LocalDate.parse(screeningDto.getDate());
         Time startTime = Time.valueOf(screeningDto.getStartTime());
         Time endTime = Time.valueOf(screeningDto.getEndTime());
 
-        List<Screening> screeningList = screeningDataService.findByDateAndClinicId(date, clinic.getId());
+        if (!ignoreLimitation) {
+            List<Screening> screeningList = screeningDataService.findByDateAndClinicId(date, clinic.getId());
 
-        if (screeningList != null) {
-            int numberOfRooms = clinic.getNumberOfRooms();
-            int maxVisits = clinic.getMaxScreeningVisits() * numberOfRooms;
-            int patients = 0;
+            if (screeningList != null) {
+                int numberOfRooms = clinic.getNumberOfRooms();
+                int maxVisits = clinic.getMaxScreeningVisits() * numberOfRooms;
+                int patients = 0;
 
-            for (Screening s : screeningList) {
-                if (s.getId().equals(screening.getId())) {
-                    maxVisits++;
-                } else {
-                    if (startTime.isBefore(s.getStartTime())) {
-                        if (s.getStartTime().isBefore(endTime)) {
-                            patients++;
-                        }
+                for (Screening s : screeningList) {
+                    if (s.getId().equals(screening.getId())) {
+                        maxVisits++;
                     } else {
-                        if (startTime.isBefore(s.getEndTime())) {
-                            patients++;
+                        if (startTime.isBefore(s.getStartTime())) {
+                            if (s.getStartTime().isBefore(endTime)) {
+                                patients++;
+                            }
+                        } else {
+                            if (startTime.isBefore(s.getEndTime())) {
+                                patients++;
+                            }
                         }
                     }
                 }
-            }
 
-            Validate.isTrue(screeningList.size() < maxVisits, "Maximum amount of Screening Visits exceeded for this day");
-            Validate.isTrue(patients < numberOfRooms, "Too many Patients at the same time");
+                if (screeningList.size() >= maxVisits) {
+                    throw new LimitationExceededException("Maximum amount of Screening Visits exceeded for this day");
+                }
+                if (patients >= numberOfRooms) {
+                    throw new LimitationExceededException("Too many Patients at the same time");
+                }
+            }
         }
 
         screening.setDate(date);
