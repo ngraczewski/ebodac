@@ -142,26 +142,20 @@
 
             if(id >= 0) {
                 var rowData = jQuery("#screenings").jqGrid ('getRowData', id);
-                var participantId = rowData['id'];
-                var participantName = rowData['volunteer.name'];
-                var clinic = rowData['site.siteId'] + " - " + rowData['clinic.location'] + " - " + rowData["room.number"];
+                var bookingId = rowData['id'];
+                var volunteerName = rowData['volunteer.name'];
                 var date = rowData['date'];
-                var startTime = rowData['startTime'];
             } else {
-                var participantId = $scope.screeningForPrint.volunteer.id;
-                var participantName =  $scope.screeningForPrint.volunteer.name;
-                var clinic = $scope.screeningForPrint.site.siteId + " - " + $scope.screeningForPrint.clinic.location + " - " + $scope.screeningForPrint.room.number;
+                var bookingId = $scope.screeningForPrint.volunteer.id;
+                var volunteerName =  $scope.screeningForPrint.volunteer.name;
                 var date = $scope.screeningForPrint.date;
-                var startTime = $scope.screeningForPrint.startTime;
             }
 
             var winPrint = window.open("../booking-app/resources/partials/volunteerCardScreening.html");
             winPrint.onload = function() {
-                $('#participantId', winPrint.document).html(participantId);
-                $('#participantName', winPrint.document).html(participantName);
-                $('#location', winPrint.document).html(clinic);
+                $('#bookingId', winPrint.document).html(bookingId);
+                $('#volunteerName', winPrint.document).html(volunteerName);
                 $('#screeningDate', winPrint.document).html(date);
-                $('#apptTime', winPrint.document).html(startTime);
 
                 winPrint.focus();
                 winPrint.print();
