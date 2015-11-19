@@ -2,15 +2,25 @@ package org.motechproject.bookingapp.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
-import org.motechproject.mds.domain.MdsEntity;
 
 @Entity
-public class Volunteer extends MdsEntity {
+public class Volunteer {
+
+    @Field
+    private Long id;
 
     @Field(required = true)
     private String name;
 
     public Volunteer() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Volunteer(String name) {

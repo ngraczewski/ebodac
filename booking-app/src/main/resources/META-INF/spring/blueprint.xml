@@ -13,8 +13,6 @@
                     interface="org.motechproject.bookingapp.repository.ScreeningDataService" />
     <osgi:reference id="siteDataService"
                     interface="org.motechproject.bookingapp.repository.SiteDataService" />
-    <osgi:reference id="roomDataService"
-                    interface="org.motechproject.bookingapp.repository.RoomDataService" />
     <osgi:reference id="visitScheduleOffsetDataService"
                     interface="org.motechproject.bookingapp.repository.VisitScheduleOffsetDataService" />
     <osgi:reference id="visitBookingDetailsDataService"

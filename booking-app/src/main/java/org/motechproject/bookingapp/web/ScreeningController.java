@@ -97,7 +97,7 @@ public class ScreeningController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public String handleBadRequest(Exception e) {
-        LOGGER.error("Error while add or updating screening", e);
+        LOGGER.debug("Error while add or updating screening", e);
         return e.getMessage();
     }
 }

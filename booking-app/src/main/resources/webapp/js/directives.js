@@ -61,7 +61,7 @@
                     colNames: ["ID", scope.msg("bookingApp.screening.volunteerName"),
                         scope.msg("bookingApp.screening.clinic"), scope.msg("bookingApp.screening.date"),
                         scope.msg("bookingApp.screening.startTime"), scope.msg("bookingApp.screening.endTime"),
-                        scope.msg("bookingApp.screening.room"), scope.msg("bookingApp.screening.site"),""],
+                        scope.msg("bookingApp.screening.site"),""],
                     colModel: [
                         { name: "id" },
                         { name: "volunteer.name" },
@@ -69,7 +69,6 @@
                         { name: "date" },
                         { name: "startTime" },
                         { name: "endTime" },
-                        { name: "room.number"},
                         { name: "site.siteId"},
                         { name: "print", align: "center", sortable: false, width: 40}
                     ],

@@ -8,13 +8,15 @@ import org.motechproject.commons.date.model.Time;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
-import org.motechproject.mds.domain.MdsEntity;
 
 @Entity(maxFetchDepth = 3)
-public class Screening extends MdsEntity {
+public class Screening {
 
     @Field
-    private Room room;
+    private Long id;
+
+    @Field
+    private Clinic clinic;
 
     @Field(required = true)
     private Volunteer volunteer;
@@ -34,8 +36,7 @@ public class Screening extends MdsEntity {
     public ScreeningDto toDto() {
         ScreeningDto dto = new ScreeningDto();
         dto.setId(getId().toString());
-        dto.setRoomId(room.getId().toString());
-        dto.setClinicId(getRoom().getClinic().getId().toString());
+        dto.setClinicId(getClinic().getId().toString());
         dto.setSiteId(getSite().getId().toString());
         dto.setVolunteerId(volunteer.getId().toString());
         dto.setVolunteerName(volunteer.getName());
@@ -46,27 +47,27 @@ public class Screening extends MdsEntity {
     }
 
     @Ignore
-    public Clinic getClinic() {
-        if (room != null) {
-            return room.getClinic();
-        }
-        return null;
-    }
-
-    @Ignore
     public Site getSite() {
-        if (room != null) {
-            return room.getClinic().getSite();
+        if (clinic != null) {
+            return clinic.getSite();
         }
         return null;
     }
 
-    public Room getRoom() {
-        return room;
+    public Long getId() {
+        return id;
     }
 
-    public void setRoom(Room room) {
-        this.room = room;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Clinic getClinic() {
+        return clinic;
+    }
+
+    public void setClinic(Clinic clinic) {
+        this.clinic = clinic;
     }
 
     public Volunteer getVolunteer() {
