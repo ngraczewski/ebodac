@@ -38,19 +38,11 @@
                         </div>
                         <div class="booking-app input-group" ng-show="form.screeningDto.siteId">
                             <span class="left input-group-addon">{{msg('bookingApp.screening.clinic')}}</span>
-                            <select class="form-control" ui-select2 id="clinicSelect" ng-model="form.screeningDto.clinicId" set="rooms">
+                            <select class="form-control" ui-select2 id="clinicSelect" ng-model="form.screeningDto.clinicId">
                                 <option ng-hide="form.screeningDto.clinicId" value="">{{'- ' + msg('bookingApp.screening.choose') + ' -'}}</option>
                                 <option ng-repeat="clinic in clinics" value="{{clinic.id}}" ng-selected="{{clinic.id == form.screeningDto.clinicId}}">{{clinic.location}}</option>
                             </select>
                             <span class="input-group-addon validator" ng-class="{'alert-success': form.screeningDto.clinicId}"><i class="fa fa-fw fa-check"></i></span>
-                        </div>
-                        <div class="booking-app input-group" ng-show="form.screeningDto.clinicId">
-                            <span class="left input-group-addon">{{msg('bookingApp.screening.room')}}</span>
-                            <select class="form-control square" ui-select2 id="roomSelect" ng-model="form.screeningDto.roomId">
-                                <option ng-hide="form.screeningDto.roomId" value="">{{'- ' + msg('bookingApp.screening.choose') + ' -'}}</option>
-                                <option ng-repeat="room in rooms" value="{{room.id}}" ng-selected="{{room.id == form.screeningDto.roomId}}">{{room.number}}</option>
-                            </select>
-                            <span class="input-group-addon validator" ng-class="{'alert-success': form.screeningDto.roomId}"><i class="fa fa-fw fa-check"></i></span>
                         </div>
                 </div>
                 <div class="modal-footer">

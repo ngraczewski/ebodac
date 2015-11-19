@@ -25,7 +25,7 @@ public class VisitBookingDetails {
     private Time endTime;
 
     @Field
-    private Room room;
+    private Clinic clinic;
 
     @Field(required = true)
     private Visit visit;
@@ -83,12 +83,12 @@ public class VisitBookingDetails {
         this.endTime = endTime;
     }
 
-    public Room getRoom() {
-        return room;
+    public Clinic getClinic() {
+        return clinic;
     }
 
-    public void setRoom(Room room) {
-        this.room = room;
+    public void setClinic(Clinic clinic) {
+        this.clinic = clinic;
     }
 
     public Visit getVisit() {

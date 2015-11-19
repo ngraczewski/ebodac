@@ -49,7 +49,6 @@
             $timeout(function() {
                 $('#siteSelect').trigger('change');
                 $('#clinicSelect').trigger('change');
-                $('#roomSelect').trigger('change');
             });
         };
 
@@ -85,6 +84,9 @@
                     $("#screenings").trigger('reloadGrid');
                     $scope.screeningForPrint = data;
                     $scope.form.screeningDto = undefined;
+                },
+                function error(response) {
+                    motechAlert('bookingApp.screening.scheduleError', 'bookingApp.screening.error', response.data);
                 });
         };
 
@@ -95,8 +97,7 @@
                 && $scope.form.screeningDto.date
                 && $scope.form.screeningDto.startTime
                 && $scope.isValidEndTime() === true
-                && $scope.form.screeningDto.clinicId
-                && $scope.form.screeningDto.roomId;
+                && $scope.form.screeningDto.clinicId;
         };
 
         $scope.parseTime = function(string) {

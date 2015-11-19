@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ScreeningService {
 
-    List<Screening> getScreenings(int page, int pageSize, String sortColumn, String sortDirection, Range dateRange);
+    List<Screening> getScreenings(int page, int pageSize, String sortColumn, String sortDirection, Range<LocalDate> dateRange);
 
     long countScreeningsForDateRange(Range<LocalDate> dateRange);
 

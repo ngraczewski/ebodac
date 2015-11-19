@@ -2,14 +2,12 @@ package org.motechproject.bookingapp.service.impl;
 
 import org.apache.commons.lang.Validate;
 import org.joda.time.LocalDate;
-import org.motechproject.bookingapp.domain.Room;
+import org.motechproject.bookingapp.domain.Clinic;
 import org.motechproject.bookingapp.domain.Screening;
 import org.motechproject.bookingapp.domain.ScreeningDto;
 import org.motechproject.bookingapp.domain.Volunteer;
 import org.motechproject.bookingapp.repository.ClinicDataService;
-import org.motechproject.bookingapp.repository.RoomDataService;
 import org.motechproject.bookingapp.repository.ScreeningDataService;
-import org.motechproject.bookingapp.repository.SiteDataService;
 import org.motechproject.bookingapp.repository.VolunteerDataService;
 import org.motechproject.bookingapp.service.ScreeningService;
 import org.motechproject.bookingapp.util.ScreeningValidator;
@@ -33,17 +31,11 @@ public class ScreeningServiceImpl implements ScreeningService {
     private VolunteerDataService volunteerDataService;
 
     @Autowired
-    private SiteDataService siteDataService;
-
-    @Autowired
     private ClinicDataService clinicDataService;
-
-    @Autowired
-    private RoomDataService roomDataService;
 
     @Override
     @Transactional
-    public List<Screening> getScreenings(int page, int pageSize, String sortColumn, String sortDirection, Range dateRange) {
+    public List<Screening> getScreenings(int page, int pageSize, String sortColumn, String sortDirection, Range<LocalDate> dateRange) {
 
         QueryParams queryParams;
 
@@ -104,16 +96,16 @@ public class ScreeningServiceImpl implements ScreeningService {
     }
 
     private void checkNumberOfPatientsAndSetScreeningData(ScreeningDto screeningDto, Screening screening) {
-        Room room = roomDataService.findById(Long.parseLong(screeningDto.getRoomId()));
+        Clinic clinic = clinicDataService.findById(Long.parseLong(screeningDto.getClinicId()));
         LocalDate date = LocalDate.parse(screeningDto.getDate());
         Time startTime = Time.valueOf(screeningDto.getStartTime());
         Time endTime = Time.valueOf(screeningDto.getEndTime());
 
-        List<Screening> screeningList = screeningDataService.findByDateAndRoomId(date, room.getId());
+        List<Screening> screeningList = screeningDataService.findByDateAndClinicId(date, clinic.getId());
 
         if (screeningList != null) {
-            int maxPatients = room.getMaxPatients();
-            int maxVisits = room.getMaxScreeningVisits();
+            int numberOfRooms = clinic.getNumberOfRooms();
+            int maxVisits = clinic.getMaxScreeningVisits() * numberOfRooms;
             int patients = 0;
 
             for (Screening s : screeningList) {
@@ -133,12 +125,12 @@ public class ScreeningServiceImpl implements ScreeningService {
             }
 
             Validate.isTrue(screeningList.size() < maxVisits, "Maximum amount of Screening Visits exceeded for this day");
-            Validate.isTrue(patients < maxPatients, "Too many Patients at the same time for this Room");
+            Validate.isTrue(patients < numberOfRooms, "Too many Patients at the same time");
         }
 
         screening.setDate(date);
         screening.setStartTime(startTime);
         screening.setEndTime(endTime);
-        screening.setRoom(room);
+        screening.setClinic(clinic);
     }
 }

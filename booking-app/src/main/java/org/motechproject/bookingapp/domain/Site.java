@@ -3,13 +3,15 @@ package org.motechproject.bookingapp.domain;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
-import org.motechproject.mds.domain.MdsEntity;
 
 import javax.jdo.annotations.Persistent;
 import java.util.List;
 
 @Entity
-public class Site extends MdsEntity {
+public class Site {
+
+    @Field
+    private Long id;
 
     @Field
     @Cascade(delete = true)
@@ -18,6 +20,14 @@ public class Site extends MdsEntity {
 
     @Field
     private String siteId;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public List<Clinic> getClinics() {
         return clinics;
