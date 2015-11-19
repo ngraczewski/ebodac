@@ -1,7 +1,14 @@
 <div class="booking-app">
+    <div class="row inside form-inline">
+        <button ng-click="exportEntityInstances()" type="button" class="btn btn-default">
+            <span class="glyphicon glyphicon-export"></span>
+            {{msg('bookingApp.btn.exportData')}}
+        </button>
+    </div>
     <div id="primeVaccinationTable" class="row inside booking-app overrideJqgridTable">
         <table id="primeVaccinationSchedule" prime-vaccination-grid><tr><td></td></tr></table>
         <div id="pager"></div>
     </div>
     <div ng-include="'../booking-app/resources/partials/modals/primeVaccinationModal.html'"></div>
+    <div ng-include="'../booking-app/resources/partials/modals/export-entity.html'"></div>
 </div>

@@ -8,7 +8,7 @@ import org.motechproject.bookingapp.domain.Screening;
 import org.motechproject.bookingapp.domain.ScreeningDto;
 import org.motechproject.bookingapp.exception.LimitationExceededException;
 import org.motechproject.bookingapp.service.ScreeningService;
-import org.motechproject.bookingapp.web.domain.GridSettings;
+import org.motechproject.bookingapp.web.domain.BookingGridSettings;
 import org.motechproject.bookingapp.web.domain.StringResponse;
 import org.motechproject.commons.api.Range;
 import org.motechproject.mds.web.domain.Records;
@@ -40,7 +40,7 @@ public class ScreeningController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public Records<Screening> getScreenings(GridSettings settings) {
+    public Records<Screening> getScreenings(BookingGridSettings settings) {
 
         int page = settings.getPage();
         int pageSize = settings.getRows();

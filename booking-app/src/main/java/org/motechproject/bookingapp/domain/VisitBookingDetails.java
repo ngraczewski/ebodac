@@ -2,6 +2,7 @@ package org.motechproject.bookingapp.domain;
 
 import org.joda.time.LocalDate;
 import org.motechproject.commons.date.model.Time;
+import org.motechproject.ebodac.domain.Subject;
 import org.motechproject.ebodac.domain.Visit;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
@@ -32,17 +33,23 @@ public class VisitBookingDetails {
 
     @Field(required = true)
     private Visit visit;
+
+    @Field(required = true)
+    private Subject subject;
+
     public VisitBookingDetails() {
     }
 
     public VisitBookingDetails(LocalDate bookingPlannedDate, Visit visit) {
         this.bookingPlannedDate = bookingPlannedDate;
         this.visit = visit;
+        this.subject = visit.getSubject();
     }
 
     public VisitBookingDetails(Visit visit, LocalDate bookingActualDate) {
         this.visit = visit;
         this.bookingActualDate = bookingActualDate;
+        this.subject = visit.getSubject();
     }
 
     public Long getId() {
@@ -107,5 +114,16 @@ public class VisitBookingDetails {
 
     public void setVisit(Visit visit) {
         this.visit = visit;
+        if (visit != null) {
+            this.subject = visit.getSubject();
+        }
+    }
+
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
     }
 }
