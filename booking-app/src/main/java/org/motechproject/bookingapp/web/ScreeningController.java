@@ -6,6 +6,7 @@ import org.joda.time.LocalDate;
 import org.motechproject.bookingapp.domain.DateFilter;
 import org.motechproject.bookingapp.domain.Screening;
 import org.motechproject.bookingapp.domain.ScreeningDto;
+import org.motechproject.bookingapp.exception.LimitationExceededException;
 import org.motechproject.bookingapp.service.ScreeningService;
 import org.motechproject.bookingapp.web.domain.GridSettings;
 import org.motechproject.bookingapp.web.domain.StringResponse;
@@ -81,10 +82,14 @@ public class ScreeningController {
         return screeningService.getScreeningById(id);
     }
 
-    @RequestMapping(value = "/new", method = RequestMethod.POST, consumes = "application/json")
+    @RequestMapping(value = "/new/{ignoreLimitation}", method = RequestMethod.POST, consumes = "application/json")
     @ResponseBody
-    public Screening addOrUpdateScreening(@RequestBody ScreeningDto screening) {
-        return screeningService.addOrUpdate(screening);
+    public Object addOrUpdateScreening(@PathVariable Boolean ignoreLimitation, @RequestBody ScreeningDto screening) {
+        try {
+            return screeningService.addOrUpdate(screening, ignoreLimitation);
+        } catch (LimitationExceededException e) {
+            return e.getMessage();
+        }
     }
 
     @RequestMapping(value = "/getDefaultDateFilter")

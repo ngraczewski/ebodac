@@ -78,16 +78,25 @@
             });
         };
 
-        $scope.saveScreening = function() {
-            Screenings.addOrUpdate($scope.form.screeningDto,
-                function success(data) {
+        $scope.saveScreening = function(ignoreLimitation) {
+            $http.post('../booking-app/screenings/new/' + ignoreLimitation, $scope.form.screeningDto)
+            .success(function(data) {
+                if (data && (typeof(data) === 'string')) {
+                    jConfirm($scope.msg('bookingApp.screening.confirmMsg', data), $scope.msg('bookingApp.screening.confirmTitle'),
+                        function (response) {
+                            if (response) {
+                                $scope.saveScreening(true);
+                            }
+                        });
+                } else {
                     $("#screenings").trigger('reloadGrid');
                     $scope.screeningForPrint = data;
                     $scope.form.screeningDto = undefined;
-                },
-                function error(response) {
-                    motechAlert('bookingApp.screening.scheduleError', 'bookingApp.screening.error', response.data);
-                });
+                }
+            })
+            .error(function(response) {
+                motechAlert('bookingApp.screening.scheduleError', 'bookingApp.screening.error', response);
+            });
         };
 
         $scope.formIsFilled = function() {
