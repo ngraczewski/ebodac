@@ -5,10 +5,6 @@
 
     var services = angular.module('bookingApp.services', ['ngResource']);
 
-    services.factory('Volunteers', function($resource) {
-        return $resource('../booking-app/volunteers', {}, {});
-    });
-
     services.factory('Screenings', function($resource) {
         return $resource('../booking-app/screenings', {}, {
             'get': {url: '../booking-app/screenings/:id', method: 'GET'},
@@ -18,6 +14,12 @@
 
     services.factory('Sites', function($resource) {
         return $resource('../booking-app/sites', {}, {});
+    });
+
+    services.factory('PrimeVaccinationSchedule', function($resource) {
+        return $resource('../booking-app/primeVaccinationSchedule', {}, {
+            'addOrUpdate': { url: '../booking-app/primeVaccinationSchedule', method: 'POST' },
+        });
     });
 
 }());

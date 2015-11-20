@@ -24,6 +24,11 @@
     text-align: left;
 }
 
+.prime-vaccination-schedule-modal-body > div > span.left {
+    width: 190px;
+    text-align: left;
+}
+
 .select2-choice {
     border-radius: 0px !important;
 }

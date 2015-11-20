@@ -7,22 +7,32 @@
 
     <osgi:reference id="volunteerDataService"
                     interface="org.motechproject.bookingapp.repository.VolunteerDataService" />
+
     <osgi:reference id="clinicDataService"
                     interface="org.motechproject.bookingapp.repository.ClinicDataService" />
+
     <osgi:reference id="screeningDataService"
                     interface="org.motechproject.bookingapp.repository.ScreeningDataService" />
+
     <osgi:reference id="siteDataService"
                     interface="org.motechproject.bookingapp.repository.SiteDataService" />
+
     <osgi:reference id="visitScheduleOffsetDataService"
                     interface="org.motechproject.bookingapp.repository.VisitScheduleOffsetDataService" />
+
     <osgi:reference id="visitBookingDetailsDataService"
                     interface="org.motechproject.bookingapp.repository.VisitBookingDetailsDataService" />
 
     <osgi:reference id="subjectDataService"
                     interface="org.motechproject.ebodac.repository.SubjectDataService" />
 
+    <osgi:reference id="visitDataService"
+                    interface="org.motechproject.ebodac.repository.VisitDataService" />
+
     <osgi:service ref="visitScheduleService" interface="org.motechproject.bookingapp.service.VisitScheduleService" />
+
     <osgi:service ref="visitScheduleOffsetService" interface="org.motechproject.bookingapp.service.VisitScheduleOffsetService" />
+
     <osgi:service ref="visitBookingDetailsService" interface="org.motechproject.bookingapp.service.VisitBookingDetailsService" />
 
 </beans>

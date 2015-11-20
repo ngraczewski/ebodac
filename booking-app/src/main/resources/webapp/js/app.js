@@ -17,7 +17,7 @@
         $routeProvider
             .when('/bookingApp/screening', {
                 templateUrl: '../booking-app/resources/partials/screening.html',
-                controller: 'BAScreeningCtrl'
+                controller: 'BookingAppScreeningCtrl'
             })
             .when('/bookingApp/primeVaccination', {
                 templateUrl: '../booking-app/resources/partials/primeVaccination.html',
