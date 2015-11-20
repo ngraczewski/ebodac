@@ -6,8 +6,8 @@ public class GridSettings {
 
     private Integer rows;
     private Integer page;
-    private String sidx;
-    private String sort;
+    private String sortColumn;
+    private String sortDirection;
     private DateFilter dateFilter;
     private String startDate;
     private String endDate;
@@ -28,20 +28,20 @@ public class GridSettings {
         this.page = page;
     }
 
-    public String getSidx() {
-        return sidx;
+    public String getSortColumn() {
+        return sortColumn;
     }
 
-    public void setSidx(String sidx) {
-        this.sidx = sidx;
+    public void setSortColumn(String sortColumn) {
+        this.sortColumn = sortColumn;
     }
 
-    public String getSort() {
-        return sort;
+    public String getSortDirection() {
+        return sortDirection;
     }
 
-    public void setSort(String sort) {
-        this.sort = sort;
+    public void setSortDirection(String sortDirection) {
+        this.sortDirection = sortDirection;
     }
 
     public DateFilter getDateFilter() {

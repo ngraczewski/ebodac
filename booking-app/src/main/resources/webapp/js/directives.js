@@ -69,19 +69,28 @@
                         { name: "date" },
                         { name: "startTime" },
                         { name: "endTime" },
-                        { name: "site.siteId"},
+                        {
+                            name: "site.siteId",
+                            index: 'clinic.site.siteId'
+                        },
                         { name: "print", align: "center", sortable: false, width: 40}
                     ],
-                    gridComplete: function(){
-                            var ids = elem.getDataIDs();
-                            for(var i=0;i<ids.length;i++){
-                                elem.setRowData(ids[i],{print: createButton(ids[i])})
-                            }
-                            $compile($('.printBtn'))(scope);
-                        },
+                    gridComplete: function() {
+                        var ids = elem.getDataIDs();
+                        for(var i = 0; i < ids.length; i++){
+                            elem.setRowData(ids[i], {print: createButton(ids[i])})
+                        }
+                        $compile($('.printBtn'))(scope);
+                        $('#screeningTable .ui-jqgrid-hdiv').addClass("table-lightblue");
+                        $('#screeningTable .ui-jqgrid-btable').addClass("table-lightblue");
+                    },
                     pager: "#pager",
                     rowNum: 10,
                     rowList: [10, 20, 30],
+                    prmNames: {
+                        sort: 'sortColumn',
+                        order: 'sortDirection'
+                    },
                     sortname: null,
                     sortorder: "desc",
                     viewrecords: true,
@@ -101,7 +110,11 @@
                     beforeSelectRow: function() {
                         return false;
                     },
-                    onCellSelect: scope.editScreening
+                    onCellSelect: function (id, iCol, cellContent, e) {
+                        if (iCol !== 7) {
+                            scope.editScreening(id);
+                        }
+                    }
                 });
 
             }

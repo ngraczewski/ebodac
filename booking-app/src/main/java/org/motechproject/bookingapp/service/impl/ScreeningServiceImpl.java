@@ -1,5 +1,6 @@
 package org.motechproject.bookingapp.service.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.joda.time.LocalDate;
 import org.motechproject.bookingapp.domain.Clinic;
@@ -39,7 +40,7 @@ public class ScreeningServiceImpl implements ScreeningService {
 
         QueryParams queryParams;
 
-        if (sortColumn != null && sortDirection != null) {
+        if (StringUtils.isNotBlank(sortColumn) && StringUtils.isNotBlank(sortDirection)) {
             queryParams = new QueryParams(page, pageSize, new Order(sortColumn, sortDirection));
         } else {
             queryParams = new QueryParams(page, pageSize);
