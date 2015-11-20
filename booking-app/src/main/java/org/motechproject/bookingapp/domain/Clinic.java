@@ -21,7 +21,7 @@ public class Clinic {
     private String location;
 
     @UIDisplayable(position = 2)
-    @Field(required = true)
+    @Field(displayName = "Amount of Rooms", required = true)
     private Integer numberOfRooms;
 
     @UIDisplayable(position = 3)
