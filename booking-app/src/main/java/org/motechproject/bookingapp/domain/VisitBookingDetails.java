@@ -25,11 +25,13 @@ public class VisitBookingDetails {
     private Time endTime;
 
     @Field
+    private Boolean femaleChildBearingAge;
+
+    @Field
     private Clinic clinic;
 
     @Field(required = true)
     private Visit visit;
-
     public VisitBookingDetails() {
     }
 
@@ -81,6 +83,14 @@ public class VisitBookingDetails {
 
     public void setEndTime(Time endTime) {
         this.endTime = endTime;
+    }
+
+    public Boolean getFemaleChildBearingAge() {
+        return femaleChildBearingAge;
+    }
+
+    public void setFemaleChildBearingAge(Boolean femaleChildBearingAge) {
+        this.femaleChildBearingAge = femaleChildBearingAge;
     }
 
     public Clinic getClinic() {

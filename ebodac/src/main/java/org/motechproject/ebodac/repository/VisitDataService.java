@@ -6,6 +6,7 @@ import org.motechproject.ebodac.domain.Visit;
 import org.motechproject.ebodac.domain.VisitType;
 import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
+import org.motechproject.mds.query.QueryParams;
 import org.motechproject.mds.service.MotechDataService;
 import org.motechproject.mds.util.Constants;
 
@@ -35,6 +36,12 @@ public interface VisitDataService extends MotechDataService<Visit> {
 
     @Lookup
     List<Visit> findVisitsByType(@LookupField(name = "type") VisitType visitType);
+
+    @Lookup
+    List<Visit> findVisitsByTypeDateAndPrimerVaccinationDate(@LookupField(name = "type") VisitType visitType,
+                                                             @LookupField(name = "date", customOperator = Constants.Operators.NEQ) LocalDate date,
+                                                             @LookupField(name = "subject.primerVaccinationDate", customOperator = Constants.Operators.EQ) LocalDate primerVaccinationDate,
+                                                             QueryParams queryParams);
 
     @Lookup(name = "Find Visits By Participant Id")
     List<Visit> findVisitsBySubjectId(@LookupField(name = "subject.subjectId",
@@ -236,4 +243,8 @@ public interface VisitDataService extends MotechDataService<Visit> {
     List<Visit> findVisitsByPlannedVisitDateRangeAndTypeAndActualVisitDate(@LookupField(name = "motechProjectedDate") Range<LocalDate> motechProjectedDateRange,
                                                                            @LookupField(name = "type") VisitType visitType,
                                                                            @LookupField(name = "date", customOperator = Constants.Operators.EQ) LocalDate date);
+
+    long countFindVisitsByTypeDateAndPrimerVaccinationDate(@LookupField(name = "type") VisitType visitType,
+                                                           @LookupField(name = "date", customOperator = Constants.Operators.NEQ) LocalDate date,
+                                                           @LookupField(name = "subject.primerVaccinationDate", customOperator = Constants.Operators.EQ) LocalDate primerVaccinationDate);
 }

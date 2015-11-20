@@ -3,10 +3,69 @@
 
     var controllers = angular.module('bookingApp.controllers', []);
 
-    controllers.controller('BAScreeningCtrl', function ($scope, $timeout, $http, Screenings, Sites) {
+    controllers.controller('BookingAppBaseCtrl', function ($scope, $timeout, Screenings, Sites) {
 
         $scope.sites = Sites.query();
         $scope.screeningForPrint = {};
+
+        $scope.reloadSelects = function() {
+            $timeout(function() {
+                $('#siteSelect').trigger('change');
+                $('#clinicSelect').trigger('change');
+            });
+        };
+
+        $scope.findById = function(list, id) {
+            var i, parsedId = parseInt(id);
+
+            for (i = 0; i < list.length; i += 1) {
+                if (list[i].id === parsedId) {
+                    return list[i];
+                }
+            }
+
+            return undefined;
+        };
+
+        $scope.parseTime = function(string) {
+
+            if (string === undefined || string === "") {
+                return string;
+            }
+
+            var split = string.split(":"),
+                time = {};
+
+            time.hours = parseInt(split[0]);
+            time.minutes = parseInt(split[1]);
+
+            return time;
+        };
+
+        $scope.isValidEndTime = function(startTimeString, endTimeString) {
+
+            var startTime = $scope.parseTime(startTimeString),
+                endTime = $scope.parseTime(endTimeString);
+
+            if (startTime === undefined || endTime === undefined) {
+                return undefined;
+            }
+
+            if (endTime === "") {
+                return false;
+            }
+
+            if (startTime.hours === endTime.hours) {
+                return startTime.minutes < endTime.minutes;
+            }
+
+            return startTime.hours < endTime.hours;
+        }
+
+    });
+
+    controllers.controller('BookingAppScreeningCtrl', function ($scope, $timeout, $http, Screenings, Sites) {
+
         $scope.selectedFilter = {};
 
         $scope.filters = [{
@@ -42,26 +101,7 @@
         $scope.newForm = function(type) {
             $scope.form = {};
             $scope.form.type = type;
-            $scope.form.screeningDto = {};
-        };
-
-        $scope.reloadSelects = function() {
-            $timeout(function() {
-                $('#siteSelect').trigger('change');
-                $('#clinicSelect').trigger('change');
-            });
-        };
-
-        $scope.findById = function(list, id) {
-            var i, parsedId = parseInt(id);
-
-            for (i = 0; i < list.length; i += 1) {
-                if (list[i].id === parsedId) {
-                    return list[i];
-                }
-            }
-
-            return undefined;
+            $scope.form.dto = {};
         };
 
         $scope.addScreening = function() {
@@ -72,14 +112,14 @@
 
         $scope.editScreening = function(id) {
             $scope.newForm("edit");
-            $scope.form.screeningDto = Screenings.get({id: id}, function() {
+            $scope.form.dto = Screenings.get({id: id}, function() {
                 $scope.reloadSelects();
                 $('#screeningModal').modal('show');
             });
         };
 
         $scope.saveScreening = function(ignoreLimitation) {
-            $http.post('../booking-app/screenings/new/' + ignoreLimitation, $scope.form.screeningDto)
+            $http.post('../booking-app/screenings/new/' + ignoreLimitation, $scope.form.dto)
             .success(function(data) {
                 if (data && (typeof(data) === 'string')) {
                     jConfirm($scope.msg('bookingApp.screening.confirmMsg', data), $scope.msg('bookingApp.screening.confirmTitle'),
@@ -91,7 +131,7 @@
                 } else {
                     $("#screenings").trigger('reloadGrid');
                     $scope.screeningForPrint = data;
-                    $scope.form.screeningDto = undefined;
+                    $scope.form.dto = undefined;
                 }
             })
             .error(function(response) {
@@ -101,52 +141,13 @@
 
         $scope.formIsFilled = function() {
             return $scope.form
-                && $scope.form.screeningDto
-                && $scope.form.screeningDto.volunteerName
-                && $scope.form.screeningDto.date
-                && $scope.form.screeningDto.startTime
-                && $scope.isValidEndTime() === true
-                && $scope.form.screeningDto.clinicId;
+                && $scope.form.dto
+                && $scope.form.dto.volunteerName
+                && $scope.form.dto.date
+                && $scope.form.dto.startTime
+                && $scope.isValidEndTime($scope.form.dto.startTime, $scope.form.dto.endTime) === true
+                && $scope.form.dto.clinicId
         };
-
-        $scope.parseTime = function(string) {
-
-            if (string === undefined || string === "") {
-                return string;
-            }
-
-            var split = string.split(":"),
-                time = {};
-
-            time.hours = parseInt(split[0]);
-            time.minutes = parseInt(split[1]);
-
-            return time;
-        };
-
-        $scope.isValidEndTime = function() {
-
-            if (!$scope.form.screeningDto) {
-                return undefined;
-            }
-
-            var startTime = $scope.parseTime($scope.form.screeningDto.startTime),
-                endTime = $scope.parseTime($scope.form.screeningDto.endTime);
-
-            if (startTime === undefined || endTime === undefined) {
-                return undefined;
-            }
-
-            if (endTime === "") {
-                return false;
-            }
-
-            if (startTime.hours === endTime.hours) {
-                return startTime.minutes < endTime.minutes;
-            }
-
-            return startTime.hours < endTime.hours;
-        }
 
         $scope.printRow = function(id) {
 
@@ -171,6 +172,47 @@
                 winPrint.print();
             }
         }
+    });
+
+    controllers.controller('BookingAppPrimeVaccinationCtrl', function ($scope, $timeout, PrimeVaccinationSchedule) {
+
+        $scope.newForm = function() {
+            $scope.form = {};
+            $scope.form.dto = {};
+        };
+
+        $scope.editPrimeVaccinationSchedule = function(id) {
+            $scope.newForm();
+            $scope.form.dto = PrimeVaccinationSchedule.get({id: id}, function() {
+                $('#primeVaccinationScheduleModal').modal('show');
+                $scope.reloadSelects();
+            });
+        };
+
+        $scope.savePrimeVaccinationSchedule = function() {
+            PrimeVaccinationSchedule.addOrUpdate($scope.form.dto,
+                function success() {
+                    $("#primeVaccinationSchedule").trigger('reloadGrid');
+                    $scope.form.dto = undefined;
+                });
+        };
+
+        $scope.reloadSelects = function() {
+            $timeout(function() {
+                $scope.$parent.reloadSelects();
+                $('#femaleChildBearingAgeSelect').trigger('change');
+            });
+        };
+
+        $scope.formIsFilled = function() {
+            return $scope.form
+                && $scope.form.dto
+                && $scope.form.dto.date
+                && $scope.form.dto.startTime
+                && $scope.form.dto.clinicId
+                && $scope.isValidEndTime($scope.form.dto.startTime, $scope.form.dto.endTime) === true
+                && $scope.form.dto.participantGender == 'Female' ? $scope.form.dto.femaleChildBearingAge : true;
+        };
     });
 
     controllers.controller('BookingAppClinicVisitScheduleCtrl', function ($scope, $http, $filter) {
