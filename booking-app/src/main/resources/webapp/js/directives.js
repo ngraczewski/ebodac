@@ -176,14 +176,13 @@
         };
     });
 
-    directives.directive('primeVaccinationGrid', function () {
+    directives.directive('primeVaccinationGrid', function ($compile) {
 
         var gridDataExtension;
 
-        function createButton() {
-            return '<button type="button" class="btn btn-primary btn-sm ng-binding">'
-                 + '<i class="fa fa-fw fa-print"></i>'
-                 + '</button>';
+        function createButton(rowId) {
+            return '<button type="button" class="btn btn-primary btn-sm ng-binding printBtn" ng-click="printCardFrom(' +
+            rowId + ')">' + '<i class="fa fa-fw fa-print"></i>' + '</button>'
         }
 
         function extendGrid(cellValue, options, rowObject) {
@@ -232,8 +231,9 @@
                     gridComplete: function(){
                         var ids = elem.getDataIDs();
                             for(var i=0;i<ids.length;i++){
-                                elem.setRowData(ids[i],{print: createButton()})
+                                elem.setRowData(ids[i],{print: createButton(ids[i])})
                             }
+                        $compile($('.printBtn'))(scope);
                         $('#primeVaccinationTable .ui-jqgrid-hdiv').addClass("table-lightblue");
                         $('#primeVaccinationTable .ui-jqgrid-btable').addClass("table-lightblue");
                     },
