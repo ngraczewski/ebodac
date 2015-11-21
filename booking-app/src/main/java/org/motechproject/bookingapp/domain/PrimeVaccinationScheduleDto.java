@@ -3,6 +3,8 @@ package org.motechproject.bookingapp.domain;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.joda.time.LocalDate;
+import org.motechproject.bookingapp.util.CustomBooleanDeserializer;
+import org.motechproject.bookingapp.util.CustomBooleanSerializer;
 import org.motechproject.bookingapp.util.CustomDateDeserializer;
 import org.motechproject.bookingapp.util.CustomDateSerializer;
 import org.motechproject.bookingapp.util.CustomTimeSerializer;
@@ -105,10 +107,12 @@ public class PrimeVaccinationScheduleDto {
         this.participantGender = participantGender;
     }
 
+    @JsonSerialize(using = CustomBooleanSerializer.class)
     public Boolean getFemaleChildBearingAge() {
         return femaleChildBearingAge;
     }
 
+    @JsonDeserialize(using = CustomBooleanDeserializer.class)
     public void setFemaleChildBearingAge(Boolean femaleChildBearingAge) {
         this.femaleChildBearingAge = femaleChildBearingAge;
     }
