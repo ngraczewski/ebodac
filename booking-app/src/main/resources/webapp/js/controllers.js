@@ -60,8 +60,26 @@
             }
 
             return startTime.hours < endTime.hours;
-        }
+        };
 
+        $scope.getCurrentDate = function() {
+
+            function parseToTwoDigits(number) {
+                if (number < 10) {
+                    return "0" + number;
+                }
+                return number;
+            }
+
+            var date = new Date(),
+                dateString = "",
+                month = parseToTwoDigits(date.getMonth() + 1),
+                day = parseToTwoDigits(date.getDate()),
+                hours = parseToTwoDigits(date.getHours()),
+                minutes = parseToTwoDigits(date.getMinutes());
+
+            return date.getFullYear() + "-" + month + "-" + day + " " + hours + ":" + minutes;
+        };
     });
 
     controllers.controller('BookingAppScreeningCtrl', function ($scope, $timeout, $http, Screenings, Sites) {
@@ -190,7 +208,7 @@
         };
 
         $scope.savePrimeVaccinationSchedule = function() {
-            PrimeVaccinationSchedule.addOrUpdate($scope.form.dto,
+            $scope.form.updated = PrimeVaccinationSchedule.addOrUpdate($scope.form.dto,
                 function success() {
                     $("#primeVaccinationSchedule").trigger('reloadGrid');
                     $scope.form.dto = undefined;
@@ -213,6 +231,30 @@
                 && $scope.isValidEndTime($scope.form.dto.startTime, $scope.form.dto.endTime) === true
                 && $scope.form.dto.participantGender == 'Female' ? $scope.form.dto.femaleChildBearingAge : true;
         };
+
+        $scope.printCardFrom = function(source) {
+
+            var rowData;
+
+            if(source === "updated") {
+                rowData = $scope.form.updated;
+            } else {
+                rowData = $("#primeVaccinationSchedule").getRowData(source);
+            }
+
+            var winPrint = window.open("../booking-app/resources/partials/primeVaccinationCard.html");
+            winPrint.onload = function() {
+                $('#versionDate', winPrint.document).html($scope.getCurrentDate());
+                $('#location', winPrint.document).html(rowData.location);
+                $('#participantId', winPrint.document).html(rowData.participantId);
+                $('#name', winPrint.document).html(rowData.participantName);
+                $('#primeVaccinationDate', winPrint.document).html(rowData.date);
+                $('#appointmentTime', winPrint.document).html(rowData.startTime);
+
+                winPrint.focus();
+                winPrint.print();
+            }
+        }
     });
 
     controllers.controller('BookingAppClinicVisitScheduleCtrl', function ($scope, $http, $filter) {
