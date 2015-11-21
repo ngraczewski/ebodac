@@ -3,7 +3,53 @@
 
     var controllers = angular.module('bookingApp.controllers', []);
 
-    controllers.controller('BookingAppBaseCtrl', function ($scope, $timeout, Screenings, Sites) {
+    controllers.controller('BookingAppBaseCtrl', function ($scope, $timeout, $http, Screenings, Sites) {
+
+        $scope.availableExportRecords = ['All','10', '25', '50', '100', '250'];
+        $scope.availableExportFormats = ['pdf','xls'];
+        $scope.actualExportRecords = 'All';
+        $scope.actualExportColumns = 'All';
+        $scope.exportFormat = 'pdf';
+        $scope.checkboxModel = {
+            exportWithLookup : true,
+            exportWithOrder : false,
+            exportWithFilter : true
+        };
+
+        $scope.exportEntityInstances = function () {
+            $scope.checkboxModel.exportWithLookup = false;
+            $('#exportBookingAppInstanceModal').modal('show');
+        };
+
+        $scope.changeExportRecords = function (records) {
+            $scope.actualExportRecords = records;
+        };
+
+        $scope.changeExportFormat = function (format) {
+            $scope.exportFormat = format;
+        };
+
+        $scope.closeExportEbodacInstanceModal = function () {
+            $('#exportBookingAppInstanceModal').resetForm();
+            $('#exportBookingAppInstanceModal').modal('hide');
+        };
+
+        $scope.exportInstanceWithUrl = function(url) {
+            if ($scope.selectedLookup !== undefined && $scope.checkboxModel.exportWithLookup === true) {
+                url = url + "&lookup=" + (($scope.selectedLookup) ? $scope.selectedLookup.lookupName : "");
+                url = url + "&fields=" + encodeURIComponent(JSON.stringify($scope.lookupBy));
+            }
+
+            $http.get(url)
+            .success(function () {
+                $('#exportBookingAppInstanceModal').resetForm();
+                $('#exportBookingAppInstanceModal').modal('hide');
+                window.location.replace(url);
+            })
+            .error(function (response) {
+                handleResponse('mds.error', 'mds.error.exportData', response);
+            });
+        };
 
         $scope.sites = Sites.query();
         $scope.screeningForPrint = {};
@@ -167,6 +213,34 @@
                 && $scope.form.dto.clinicId
         };
 
+        $scope.exportInstance = function() {
+            var sortColumn, sortDirection, url = "../booking-app/exportInstances/screening";
+            url = url + "?outputFormat=" + $scope.exportFormat;
+            url = url + "&exportRecords=" + $scope.actualExportRecords;
+
+            if ($scope.checkboxModel.exportWithFilter === true) {
+                url = url + "&dateFilter=" + $scope.selectedFilter.dateFilter;
+
+                if ($scope.selectedFilter.startDate) {
+                    url = url + "&startDate=" + $scope.selectedFilter.startDate;
+                }
+
+                if ($scope.selectedFilter.endDate) {
+                    url = url + "&endDate=" + $scope.selectedFilter.endDate;
+                }
+            }
+
+            if ($scope.checkboxModel.exportWithOrder === true) {
+                sortColumn = $('#screenings').getGridParam('sortname');
+                sortDirection = $('#screenings').getGridParam('sortorder');
+
+                url = url + "&sortColumn=" + sortColumn;
+                url = url + "&sortDirection=" + sortDirection;
+            }
+
+            $scope.exportInstanceWithUrl(url);
+        };
+
         $scope.printRow = function(id) {
 
             if(id >= 0) {
@@ -232,6 +306,14 @@
                 && $scope.form.dto.participantGender == 'Female' ? $scope.form.dto.femaleChildBearingAge : true;
         };
 
+        $scope.exportInstance = function() {
+            var sortColumn, sortDirection, url = "../booking-app/exportInstances/primeVaccinationSchedule";
+            url = url + "?outputFormat=" + $scope.exportFormat;
+            url = url + "&exportRecords=" + $scope.actualExportRecords;
+
+            $scope.exportInstanceWithUrl(url);
+        };
+
         $scope.printCardFrom = function(source) {
 
             var rowData;
@@ -254,7 +336,7 @@
                 winPrint.focus();
                 winPrint.print();
             }
-        }
+        };
     });
 
     controllers.controller('BookingAppClinicVisitScheduleCtrl', function ($scope, $http, $filter) {

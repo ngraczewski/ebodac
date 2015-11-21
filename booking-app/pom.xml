@@ -46,7 +46,8 @@
                         <Context-Path>booking-app</Context-Path>
                         <Export-Package>
                             org.motechproject.bookingapp.domain;version=${project.version},
-                            org.motechproject.bookingapp.repository;version=${project.version}
+                            org.motechproject.bookingapp.repository;version=${project.version},
+                            org.motechproject.bookingapp.web;version=${project.version}
                         </Export-Package>
                         <Import-Package>
                             org.motechproject.osgi.web,

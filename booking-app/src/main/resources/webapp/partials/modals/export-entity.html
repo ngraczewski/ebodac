@@ -1,0 +1,80 @@
+<div id="exportBookingAppInstanceModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exportBookingAppInstanceLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" ng-click="closeExportEbodacInstanceModal()">&times;</button>
+                <h4 class="modal-title" id="exportBookingAppInstanceModalLabel">{{msg('bookingApp.form.exportData')}}</h4>
+            </div>
+            <div class="modal-body">
+                <form id="exportEbodacInstanceForm" name="exportEbodacInstanceForm" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-6 control-label" for="records">
+                            {{msg('bookingApp.form.exportRecords')}}
+                        </label>
+                        <div class="form-inline col-md-4 col-sm-4">
+                            <div class="btn-group" id="records">
+                                <a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    {{actualExportRecords}}
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li ng-repeat="records in availableExportRecords" ng-click="changeExportRecords(records)"><a>{{records}}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-6 control-label" for="exportFormat">
+                            {{msg('bookingApp.form.exportFormat')}}
+                        </label>
+                        <div class="form-inline col-md-4 col-sm-4">
+                            <div class="btn-group" id="exportFormat">
+                                <a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    {{msg('bookingApp.form.exportFormat.' + exportFormat)}}
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li ng-repeat="format in availableExportFormats" ng-click="changeExportFormat(format)"><a>{{ msg('bookingApp.form.exportFormat.' + format) }}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-6 control-label" for="exportWithOrder">
+                            {{msg('bookingApp.form.exportWithOrder')}}
+                        </label>
+                        <div class="form-inline col-md-4 col-sm-4">
+                            <div class="btn-group" id="exportWithOrder">
+                                <input type="checkbox" ng-model="checkboxModel.exportWithOrder" ng-checked="checkboxModel.exportWithOrder">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="selectedLookup !== undefined">
+                        <label class="col-sm-6 control-label" for="exportWithLookups">
+                            {{msg('bookingApp.form.exportWithLookup')}}
+                        </label>
+                        <div class="form-inline col-md-4 col-sm-4">
+                            <div class="btn-group" id="exportWithLookups">
+                                <input type="checkbox" ng-model="checkboxModel.exportWithLookup" ng-checked="checkboxModel.exportWithLookup">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="selectedFilter !== undefined && selectedFilter.dateFilter !== undefined">
+                        <label class="col-sm-6 control-label" for="exportWithFilter">
+                            {{msg('bookingApp.form.exportWithFilter')}}
+                        </label>
+                        <div class="form-inline col-md-4 col-sm-4">
+                            <div class="btn-group" id="exportWithFilter">
+                                <input type="checkbox" ng-model="checkboxModel.exportWithFilter" ng-checked="checkboxModel.exportWithFilter">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="exportInstance()">{{msg('bookingApp.btn.export')}}</button>
+                <button class="btn btn-default" ng-click="closeExportEbodacInstanceModal()">{{msg('bookingApp.btn.cancel')}}</button>
+            </div>
+        </div>
+    </div>
+</div>

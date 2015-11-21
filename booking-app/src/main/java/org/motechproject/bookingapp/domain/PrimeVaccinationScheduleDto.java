@@ -8,6 +8,8 @@ import org.motechproject.bookingapp.util.CustomDateSerializer;
 import org.motechproject.bookingapp.util.CustomTimeSerializer;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.ebodac.domain.Gender;
+import org.motechproject.ebodac.domain.Visit;
+import org.motechproject.ebodac.domain.VisitType;
 
 public class PrimeVaccinationScheduleDto {
 
@@ -36,6 +38,32 @@ public class PrimeVaccinationScheduleDto {
     private Long clinicId;
 
     private Long visitId;
+
+    public PrimeVaccinationScheduleDto() {
+    }
+
+    public PrimeVaccinationScheduleDto(VisitBookingDetails details) {
+        LocalDate actualScreeningDate = null;
+        for (Visit visit : details.getSubject().getVisits()) {
+            if (VisitType.SCREENING.equals(visit.getType())) {
+                actualScreeningDate = visit.getDate();
+            }
+        }
+
+        setActualScreeningDate(actualScreeningDate);
+        setStartTime(details.getStartTime());
+        setParticipantId(details.getSubject().getSubjectId());
+        setParticipantName(details.getSubject().getName());
+        setClinicId(details.getClinic().getId());
+        setSiteId(details.getClinic().getSite().getId());
+        setDate(details.getBookingPlannedDate());
+        setFemaleChildBearingAge(details.getFemaleChildBearingAge());
+        setVisitBookingDetailsId(details.getId());
+        setEndTime(details.getEndTime());
+        setLocation(details.getClinic().getSite().getSiteId() + " - " + details.getClinic().getLocation());
+        setVisitId(details.getVisit().getId());
+        setParticipantGender(details.getSubject().getGender());
+    }
 
     public Long getVisitBookingDetailsId() {
         return visitBookingDetailsId;

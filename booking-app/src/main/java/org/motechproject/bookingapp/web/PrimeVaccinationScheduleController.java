@@ -2,7 +2,7 @@ package org.motechproject.bookingapp.web;
 
 import org.motechproject.bookingapp.domain.PrimeVaccinationScheduleDto;
 import org.motechproject.bookingapp.service.PrimeVaccinationScheduleService;
-import org.motechproject.bookingapp.web.domain.GridSettings;
+import org.motechproject.bookingapp.web.domain.BookingGridSettings;
 import org.motechproject.mds.web.domain.Records;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ public class PrimeVaccinationScheduleController {
 
     @RequestMapping("/primeVaccinationSchedule")
     @ResponseBody
-    public Records<PrimeVaccinationScheduleDto> getVisitBookingDetails(GridSettings settings) {
+    public Records<PrimeVaccinationScheduleDto> getVisitBookingDetails(BookingGridSettings settings) {
 
         int page = settings.getPage();
         int pageSize = settings.getRows();
