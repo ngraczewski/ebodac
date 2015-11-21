@@ -15,8 +15,8 @@
                         <span class="left input-group-addon">{{msg('bookingApp.primeVaccination.femaleChildBearingAge')}}</span>
                         <select class="form-control" ui-select2 id="femaleChildBearingAgeSelect" ng-model="form.dto.femaleChildBearingAge">
                             <option ng-hide="form.dto.femaleChildBearingAge != undefined" value="">{{'- ' + msg('bookingApp.choose') + ' -'}}</option>
-                            <option value="true">{{msg('bookingApp.primeVaccination.yes')}}</option>
-                            <option value="false">{{msg('bookingApp.primeVaccination.no')}}</option>
+                            <option value="Yes">{{msg('bookingApp.primeVaccination.yes')}}</option>
+                            <option value="No">{{msg('bookingApp.primeVaccination.no')}}</option>
                         </select>
                         <span class="input-group-addon validator" ng-class="{'alert-success': form.dto.femaleChildBearingAge != undefined && form.dto.femaleChildBearingAge != '' }"><i class="fa fa-fw fa-check"></i></span>
                     </div>

@@ -251,25 +251,27 @@
                     beforeRequest: function() {
                         gridDataExtension = [];
                     },
-                    onCellSelect: function(rowId) {
-                        var rowData = elem.getRowData(rowId),
-                            extraRowData = gridDataExtension[rowId];
+                    onCellSelect: function(rowId, iCol, cellContent, e) {
+                        if (iCol !== 8) {
+                            var rowData = elem.getRowData(rowId),
+                                extraRowData = gridDataExtension[rowId];
 
-                        scope.newForm();
-                        scope.form.dto.visitBookingDetailsId = extraRowData.visitBookingDetailsId;
-                        scope.form.dto.participantId = rowData.participantId;
-                        scope.form.dto.participantName = rowData.participantName;
-                        scope.form.dto.femaleChildBearingAge = rowData.femaleChildBearingAge;
-                        scope.form.dto.actualScreeningDate = rowData.actualScreeningDate;
-                        scope.form.dto.date = rowData.date;
-                        scope.form.dto.startTime = rowData.startTime;
-                        scope.form.dto.endTime = rowData.endTime;
-                        scope.form.dto.siteId = extraRowData.siteId;
-                        scope.form.dto.clinicId = extraRowData.clinicId;
-                        scope.form.dto.visitId = extraRowData.visitId;
-                        scope.form.dto.participantGender = extraRowData.participantGender;
-                        scope.reloadSelects();
-                        $('#primeVaccinationScheduleModal').modal('show');
+                            scope.newForm();
+                            scope.form.dto.visitBookingDetailsId = extraRowData.visitBookingDetailsId;
+                            scope.form.dto.participantId = rowData.participantId;
+                            scope.form.dto.participantName = rowData.participantName;
+                            scope.form.dto.femaleChildBearingAge = rowData.femaleChildBearingAge;
+                            scope.form.dto.actualScreeningDate = rowData.actualScreeningDate;
+                            scope.form.dto.date = rowData.date;
+                            scope.form.dto.startTime = rowData.startTime;
+                            scope.form.dto.endTime = rowData.endTime;
+                            scope.form.dto.siteId = extraRowData.siteId;
+                            scope.form.dto.clinicId = extraRowData.clinicId;
+                            scope.form.dto.visitId = extraRowData.visitId;
+                            scope.form.dto.participantGender = extraRowData.participantGender;
+                            scope.reloadSelects();
+                            $('#primeVaccinationScheduleModal').modal('show');
+                        }
                     }
                 });
 
