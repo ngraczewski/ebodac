@@ -20,7 +20,7 @@ public final class BookingAppConstants {
             put("Volunteer Name",   "volunteer.name");
             put("Site Id",          "site.siteId");
             put("Clinic",           "clinic.location");
-            put("Date",             "date");
+            put("Screening Date",   "date");
             put("Start Time",       "startTime");
             put("End Time",         "endTime");
         }
