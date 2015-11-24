@@ -23,4 +23,18 @@ public interface VisitBookingDetailsDataService extends MotechDataService<VisitB
     List<VisitBookingDetails> findByVisitTypeAndParticipantPrimeVaccinationDate(@LookupField(name = "visit.type") VisitType type,
                                                                                 @LookupField(name = "subject.primerVaccinationDate",
                                                                                         customOperator = Constants.Operators.EQ) LocalDate primerVaccinationDate);
+
+    @Lookup
+    List<VisitBookingDetails> findVisitsByParticipantIdVisitTypeAndParticipantPrimeVaccinationDate(@LookupField(name = "subject.subjectId",
+            customOperator = Constants.Operators.MATCHES_CASE_INSENSITIVE) String subjectId,
+                                                                                                   @LookupField(name = "visit.type") VisitType visitType,
+                                                                                                   @LookupField(name = "subject.primerVaccinationDate",
+                                                                                                           customOperator = Constants.Operators.EQ) LocalDate primerVaccinationDate);
+
+    @Lookup
+    List<VisitBookingDetails> findVisitsByParticipantNameVisitTypeAndParticipantPrimeVaccinationDate(@LookupField(name = "subject.name",
+            customOperator = Constants.Operators.MATCHES_CASE_INSENSITIVE) String name,
+                                                                                                     @LookupField(name = "visit.type") VisitType visitType,
+                                                                                                     @LookupField(name = "subject.primerVaccinationDate",
+                                                                                                             customOperator = Constants.Operators.EQ) LocalDate primerVaccinationDate);
 }

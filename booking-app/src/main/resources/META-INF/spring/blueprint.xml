@@ -31,6 +31,8 @@
 
     <osgi:reference id="exportService" interface="org.motechproject.ebodac.service.ExportService" />
 
+    <osgi:reference id="lookupService" interface="org.motechproject.ebodac.service.LookupService" />
+
     <osgi:service ref="visitScheduleService" interface="org.motechproject.bookingapp.service.VisitScheduleService" />
 
     <osgi:service ref="visitScheduleOffsetService" interface="org.motechproject.bookingapp.service.VisitScheduleOffsetService" />

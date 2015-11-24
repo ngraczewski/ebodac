@@ -17,7 +17,8 @@
         };
 
         $scope.exportEntityInstances = function () {
-            $scope.checkboxModel.exportWithLookup = false;
+            $scope.checkboxModel.exportWithLookup = true;
+            $scope.checkboxModel.exportWithFilter = true;
             $('#exportBookingAppInstanceModal').modal('show');
         };
 
@@ -125,6 +126,150 @@
                 minutes = parseToTwoDigits(date.getMinutes());
 
             return date.getFullYear() + "-" + month + "-" + day + " " + hours + ":" + minutes;
+        };
+
+        $scope.lookupBy = {};
+        $scope.selectedLookup = undefined;
+        $scope.lookupFields = [];
+
+        $scope.getLookups = function(url) {
+            $http.get(url)
+            .success(function(data) {
+                        $scope.lookups = data;
+            });
+        }
+
+        /**
+        * Shows/Hides lookup dialog
+        */
+        $scope.showLookupDialog = function() {
+            $("#lookup-dialog")
+            .css({'top': ($("#lookupDialogButton").offset().top - $("#main-content").offset().top)-40,
+            'left': ($("#lookupDialogButton").offset().left - $("#main-content").offset().left)-70})
+            .toggle();
+        };
+
+        /**
+        * Marks passed lookup as selected. Sets fields that belong to the given lookup and resets lookupBy object
+        * used to filter instances by given values
+        */
+        $scope.selectLookup = function(lookup) {
+            $scope.selectedLookup = lookup;
+            $scope.lookupFields = lookup.lookupFields;
+            $scope.lookupBy = {};
+        };
+
+        /**
+        * Removes lookup and resets all fields associated with a lookup
+        */
+        $scope.removeLookup = function() {
+            $scope.lookupBy = {};
+            $scope.selectedLookup = undefined;
+            $scope.lookupFields = [];
+            $scope.filterInstancesByLookup();
+        };
+
+        /**
+        * Hides lookup dialog and sends signal to refresh the grid with new data
+        */
+        $scope.filterInstancesByLookup = function() {
+            $scope.showLookupDialog();
+            $scope.refreshGrid();
+        };
+
+        $scope.refreshGrid = function() {
+            $scope.lookupRefresh = !$scope.lookupRefresh;
+        };
+
+        $scope.buildLookupFieldName = function (field) {
+            if (field.relatedName !== undefined && field.relatedName !== '' && field.relatedName !== null) {
+                return field.name + "." + field.relatedName;
+            }
+            return field.name;
+        };
+
+        /**
+        * Depending on the field type, includes proper html file containing visual representation for
+        * the object type. Radio input for boolean, select input for list and text input as default one.
+        */
+        $scope.loadInputForLookupField = function(field) {
+            var value = "default", type = "field";
+
+            if (field.className === "java.lang.Boolean") {
+                value = "boolean";
+            } else if (field.className === "java.util.Collection") {
+                value = "list";
+            } else if (field.className === "org.joda.time.DateTime" || field.className === "java.util.Date") {
+                value = "datetime";
+            } else if (field.className === "org.joda.time.LocalDate") {
+                value = "date";
+            }
+
+            if ($scope.isRangedLookup(field)) {
+                type = "range";
+                if (!$scope.lookupBy[$scope.buildLookupFieldName(field)]) {
+                    $scope.lookupBy[$scope.buildLookupFieldName(field)] = {min: '', max: ''};
+                }
+            }
+
+            return '../booking-app/resources/partials/lookups/{0}-{1}.html'.format(type, value);
+        };
+
+        $scope.isRangedLookup = function(field) {
+            return $scope.isLookupFieldOfType(field, 'RANGE');
+        };
+
+        $scope.isLookupFieldOfType = function(field, type) {
+            var i, lookupField;
+            for (i = 0; i < $scope.selectedLookup.lookupFields.length; i += 1) {
+                lookupField = $scope.selectedLookup.lookupFields[i];
+                if ($scope.buildLookupFieldName(lookupField) === $scope.buildLookupFieldName(field)) {
+                    return lookupField.type === type;
+                }
+            }
+        };
+
+        $scope.getComboboxValues = function (settings) {
+            var labelValues = MDSUtils.find(settings, [{field: 'name', value: 'mds.form.label.values'}], true).value, keys = [], key;
+            // Check the user supplied flag, if true return string set
+            if (MDSUtils.find(settings, [{field: 'name', value: 'mds.form.label.allowUserSupplied'}], true).value === true){
+                return labelValues;
+            } else {
+                if (labelValues[0].indexOf(":") === -1) {       // there is no colon, so we are dealing with a string set, not a map
+                    return labelValues;
+                } else {
+                    labelValues =  $scope.getAndSplitComboboxValues(labelValues);
+                    for(key in labelValues) {
+                        keys.push(key);
+                    }
+                    return keys;
+                }
+            }
+        };
+
+        $scope.getComboboxDisplayName = function (settings, value) {
+            var labelValues = MDSUtils.find(settings, [{field: 'name', value: 'mds.form.label.values'}], true).value;
+            // Check the user supplied flag, if true return string set
+            if (MDSUtils.find(settings, [{field: 'name', value: 'mds.form.label.allowUserSupplied'}], true).value === true){
+                return value;
+            } else {
+                if (labelValues[0].indexOf(":") === -1) { // there is no colon, so we are dealing with a string set, not a map
+                    return value;
+                } else {
+                    labelValues =  $scope.getAndSplitComboboxValues(labelValues);
+                    return labelValues[value];
+                }
+            }
+
+        };
+
+        $scope.getAndSplitComboboxValues = function (labelValues) {
+            var doublet, i, map = {};
+            for (i = 0; i < labelValues.length; i += 1) {
+                doublet = labelValues[i].split(":");
+                map[doublet[0]] = doublet[1];
+            }
+            return map;
         };
     });
 
@@ -267,6 +412,8 @@
     });
 
     controllers.controller('BookingAppPrimeVaccinationCtrl', function ($scope, $timeout, PrimeVaccinationSchedule) {
+
+        $scope.getLookups("../booking-app/getLookupsForPrimeVaccinationSchedule");
 
         $scope.newForm = function() {
             $scope.form = {};

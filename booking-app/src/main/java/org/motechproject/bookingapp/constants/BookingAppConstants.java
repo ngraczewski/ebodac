@@ -1,6 +1,9 @@
 package org.motechproject.bookingapp.constants;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class BookingAppConstants {
@@ -38,6 +41,9 @@ public final class BookingAppConstants {
             put("End Time",                 "endTime");
         }
     };
+
+    public static final List<String> AVAILABLE_LOOKUPS_FOR_PRIME_VACCINATION_SCHEDULE = new ArrayList<>(Arrays.asList(
+            "Find Visits By Participant Id", "Find Visits By Participant Name"));
 
     private BookingAppConstants() {
     }
