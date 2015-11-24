@@ -109,25 +109,25 @@
                     datatype: "json",
                     mtype: "GET",
                     colNames: [
-                        "ID",
+                        scope.msg("bookingApp.screening.bookingId"),
                         scope.msg("bookingApp.screening.volunteerName"),
+                        scope.msg("bookingApp.siteId"),
                         scope.msg("bookingApp.clinic"),
-                        scope.msg("bookingApp.date"),
+                        scope.msg("bookingApp.screening.date"),
                         scope.msg("bookingApp.startTime"),
                         scope.msg("bookingApp.endTime"),
-                        scope.msg("bookingApp.site"),
                         ""],
                     colModel: [
                         { name: "id" },
                         { name: "volunteer.name" },
-                        { name: "clinic.location" },
-                        { name: "date" },
-                        { name: "startTime" },
-                        { name: "endTime" },
                         {
                             name: "site.siteId",
                             index: 'clinic.site.siteId'
                         },
+                        { name: "clinic.location" },
+                        { name: "date" },
+                        { name: "startTime" },
+                        { name: "endTime" },
                         { name: "print", align: "center", sortable: false, width: 40}
                     ],
                     gridComplete: function() {
@@ -214,7 +214,7 @@
                         scope.msg("bookingApp.primeVaccination.participantName"),
                         scope.msg("bookingApp.primeVaccination.femaleChildBearingAge"),
                         scope.msg("bookingApp.primeVaccination.screeningActualDate"),
-                        scope.msg("bookingApp.date"),
+                        scope.msg("bookingApp.primeVaccination.primeVacDate"),
                         scope.msg("bookingApp.startTime"),
                         scope.msg("bookingApp.endTime"), ""],
                     colModel: [
