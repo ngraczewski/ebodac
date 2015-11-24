@@ -6,7 +6,6 @@ import org.motechproject.ebodac.domain.Visit;
 import org.motechproject.ebodac.domain.VisitType;
 import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
-import org.motechproject.mds.query.QueryParams;
 import org.motechproject.mds.service.MotechDataService;
 import org.motechproject.mds.util.Constants;
 
@@ -36,12 +35,6 @@ public interface VisitDataService extends MotechDataService<Visit> {
 
     @Lookup
     List<Visit> findVisitsByType(@LookupField(name = "type") VisitType visitType);
-
-    @Lookup
-    List<Visit> findVisitsByTypeDateAndPrimerVaccinationDate(@LookupField(name = "type") VisitType visitType,
-                                                             @LookupField(name = "date", customOperator = Constants.Operators.NEQ) LocalDate date,
-                                                             @LookupField(name = "subject.primerVaccinationDate", customOperator = Constants.Operators.EQ) LocalDate primerVaccinationDate,
-                                                             QueryParams queryParams);
 
     @Lookup(name = "Find Visits By Participant Id")
     List<Visit> findVisitsBySubjectId(@LookupField(name = "subject.subjectId",
@@ -244,7 +237,30 @@ public interface VisitDataService extends MotechDataService<Visit> {
                                                                            @LookupField(name = "type") VisitType visitType,
                                                                            @LookupField(name = "date", customOperator = Constants.Operators.EQ) LocalDate date);
 
-    long countFindVisitsByTypeDateAndPrimerVaccinationDate(@LookupField(name = "type") VisitType visitType,
-                                                           @LookupField(name = "date", customOperator = Constants.Operators.NEQ) LocalDate date,
-                                                           @LookupField(name = "subject.primerVaccinationDate", customOperator = Constants.Operators.EQ) LocalDate primerVaccinationDate);
+    /**
+     *  Booking App Lookups
+     */
+
+    @Lookup
+    List<Visit> findVisitsByTypeDateAndPrimerVaccinationDate(@LookupField(name = "type") VisitType visitType,
+                                                             @LookupField(name = "date", customOperator = Constants.Operators.NEQ) LocalDate date,
+                                                             @LookupField(name = "subject.primerVaccinationDate", customOperator = Constants.Operators.EQ) LocalDate primerVaccinationDate);
+
+    @Lookup(name = "Find Visits By Participant Id Type Date And Primer Vaccination Date")
+    List<Visit> findVisitsBySubjectIdTypeDateAndPrimerVaccinationDate(@LookupField(name = "subject.subjectId",
+            customOperator = Constants.Operators.MATCHES_CASE_INSENSITIVE) String subjectId,
+                                                                      @LookupField(name = "type") VisitType visitType,
+                                                                      @LookupField(name = "date",
+                                                                              customOperator = Constants.Operators.NEQ) LocalDate date,
+                                                                      @LookupField(name = "subject.primerVaccinationDate",
+                                                                              customOperator = Constants.Operators.EQ) LocalDate primerVaccinationDate);
+
+    @Lookup(name = "Find Visits By Participant Name Type Date And Primer Vaccination Date")
+    List<Visit> findVisitsBySubjectNameTypeDateAndPrimerVaccinationDate(@LookupField(name = "subject.name",
+            customOperator = Constants.Operators.MATCHES_CASE_INSENSITIVE) String name,
+                                                                        @LookupField(name = "type") VisitType visitType,
+                                                                        @LookupField(name = "date",
+                                                                                customOperator = Constants.Operators.NEQ) LocalDate date,
+                                                                        @LookupField(name = "subject.primerVaccinationDate",
+                                                                                customOperator = Constants.Operators.EQ) LocalDate primerVaccinationDate);
 }

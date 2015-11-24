@@ -1,20 +1,26 @@
 package org.motechproject.bookingapp.service.impl;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.motechproject.bookingapp.domain.PrimeVaccinationScheduleDto;
 import org.motechproject.bookingapp.domain.VisitBookingDetails;
 import org.motechproject.bookingapp.repository.ClinicDataService;
 import org.motechproject.bookingapp.repository.VisitBookingDetailsDataService;
 import org.motechproject.bookingapp.service.PrimeVaccinationScheduleService;
 import org.motechproject.bookingapp.util.PrimeVaccinationScheduleDtoUtil;
+import org.motechproject.bookingapp.web.domain.BookingGridSettings;
 import org.motechproject.ebodac.domain.Visit;
 import org.motechproject.ebodac.domain.VisitType;
 import org.motechproject.ebodac.repository.VisitDataService;
+import org.motechproject.ebodac.service.LookupService;
+import org.motechproject.ebodac.util.QueryParamsBuilder;
+import org.motechproject.ebodac.web.domain.Records;
 import org.motechproject.mds.query.QueryParams;
-import org.motechproject.mds.util.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,14 +38,17 @@ public class PrimeVaccinationScheduleServiceImpl implements PrimeVaccinationSche
     @Autowired
     private VisitDataService visitDataService;
 
+    @Autowired
+    private LookupService lookupService;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
+
     @Override
-    public List<PrimeVaccinationScheduleDto> getVisitDtos(int page, int pageSize, String sortColumn, String sortDirection) {
+    public Records<PrimeVaccinationScheduleDto> getPrimeVaccinationScheduleRecords(BookingGridSettings settings) throws IOException{
+        QueryParams queryParams = QueryParamsBuilder.buildQueryParams(settings, getFields(settings.getFields()));
+        Records<Visit> visitRecords = lookupService.getEntities(Visit.class, settings.getLookup(), settings.getFields(), queryParams);
 
-        QueryParams queryParams = buildQueryParams(page, pageSize, sortColumn, sortDirection);
-
-        List<Visit> visits = visitDataService.findVisitsByTypeDateAndPrimerVaccinationDate(VisitType.SCREENING, null,
-                null, queryParams);
-
+        List<Visit> visits = visitRecords.getRows();
         List<PrimeVaccinationScheduleDto> dtos = new ArrayList<>();
 
         Map<Long, Visit> visitIds = getVisitIds(visits);
@@ -61,12 +70,7 @@ public class PrimeVaccinationScheduleServiceImpl implements PrimeVaccinationSche
 
             dtos.add(dto);
         }
-        return dtos;
-    }
-
-    @Override
-    public long countVisitDtos() {
-        return visitDataService.countFindVisitsByTypeDateAndPrimerVaccinationDate(VisitType.SCREENING, null, null);
+        return new Records<>(visitRecords.getPage(), visitRecords.getTotal(), visitRecords.getRecords(), dtos);
     }
 
     @Override
@@ -83,18 +87,6 @@ public class PrimeVaccinationScheduleServiceImpl implements PrimeVaccinationSche
         }
 
         return PrimeVaccinationScheduleDtoUtil.createFrom(updated);
-    }
-
-    private QueryParams buildQueryParams(int page, int pageSize, String sortColumn, String sortDirection) {
-        QueryParams queryParams;
-
-        if (sortColumn != null && sortDirection != null) {
-            queryParams = new QueryParams(page, pageSize, new Order(sortColumn, sortDirection));
-        } else {
-            queryParams = new QueryParams(page, pageSize);
-        }
-
-        return queryParams;
     }
 
     private VisitBookingDetails getDetailsForVisitWithId(List<VisitBookingDetails> visitDetails, Long key) {
@@ -144,5 +136,13 @@ public class PrimeVaccinationScheduleServiceImpl implements PrimeVaccinationSche
         visit.setFemaleChildBearingAge(dto.getFemaleChildBearingAge());
         visit.setClinic(clinicDataService.findById(dto.getClinicId()));
         return visitBookingDetailsDataService.update(visit);
+    }
+
+    private Map<String, Object> getFields(String json) throws IOException {
+        if (json == null) {
+            return null;
+        } else {
+            return objectMapper.readValue(json, new TypeReference<LinkedHashMap>() {});
+        }
     }
 }

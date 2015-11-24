@@ -13,6 +13,7 @@ import org.motechproject.bookingapp.domain.DateFilter;
 import org.motechproject.bookingapp.domain.PrimeVaccinationScheduleDto;
 import org.motechproject.bookingapp.domain.Screening;
 import org.motechproject.bookingapp.domain.VisitBookingDetails;
+import org.motechproject.bookingapp.helper.DtoLookupHelper;
 import org.motechproject.bookingapp.template.PdfExportTemplate;
 import org.motechproject.bookingapp.template.XlsExportTemplate;
 import org.motechproject.bookingapp.web.domain.BookingGridSettings;
@@ -82,12 +83,9 @@ public class ExportController {
     public void exportPrimeVaccinationSchedule(BookingGridSettings settings, @RequestParam String exportRecords,
                                                @RequestParam String outputFormat, HttpServletResponse response) throws IOException {
 
-        Map<String, String> fieldsMap = new HashMap<>();
-        fieldsMap.put("visit.type", "PRIME_VACCINATION_DAY");
-        settings.setFields(objectMapper.writeValueAsString(fieldsMap));
-        settings.setLookup("Find By Visit Type And Participant Prime Vaccination Date");
+        BookingGridSettings newSettings = DtoLookupHelper.changeLookupForPrimeVaccinationScheduleExport(settings);
 
-        exportEntity(settings, exportRecords, outputFormat, response, BookingAppConstants.PRIME_VACCINATION_SCHEDULE_NAME,
+        exportEntity(newSettings, exportRecords, outputFormat, response, BookingAppConstants.PRIME_VACCINATION_SCHEDULE_NAME,
                 PrimeVaccinationScheduleDto.class, VisitBookingDetails.class, BookingAppConstants.PRIME_VACCINATION_SCHEDULE_FIELDS_MAP);
     }
 
