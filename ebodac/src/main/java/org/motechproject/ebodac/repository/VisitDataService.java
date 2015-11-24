@@ -263,4 +263,8 @@ public interface VisitDataService extends MotechDataService<Visit> {
                                                                                 customOperator = Constants.Operators.NEQ) LocalDate date,
                                                                         @LookupField(name = "subject.primerVaccinationDate",
                                                                                 customOperator = Constants.Operators.EQ) LocalDate primerVaccinationDate);
+
+    @Lookup
+    List<Visit> findByVisitTypeAndActualDateLess(@LookupField(name = "type") VisitType type,
+                                                 @LookupField(name = "date", customOperator = Constants.Operators.LT) LocalDate date);
 }

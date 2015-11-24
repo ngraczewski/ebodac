@@ -6,8 +6,9 @@ import org.joda.time.format.DateTimeFormat;
 import org.motechproject.bookingapp.constants.BookingAppConstants;
 import org.motechproject.bookingapp.exception.VisitScheduleException;
 import org.motechproject.bookingapp.service.VisitScheduleService;
-import org.motechproject.ebodac.domain.Subject;
-import org.motechproject.ebodac.repository.SubjectDataService;
+import org.motechproject.ebodac.domain.Visit;
+import org.motechproject.ebodac.domain.VisitType;
+import org.motechproject.ebodac.repository.VisitDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,15 +29,15 @@ import java.util.Map;
 public class VisitScheduleController {
 
     @Autowired
-    private SubjectDataService subjectDataService;
+    private VisitDataService visitDataService;
 
     @Autowired
     private VisitScheduleService visitScheduleService;
 
-    @RequestMapping(value = "/getSubjects", method = RequestMethod.GET)
+    @RequestMapping(value = "/getScreeningVisits", method = RequestMethod.GET)
     @ResponseBody
-    public List<Subject> getSubjects() {
-        return subjectDataService.retrieveAll();
+    public List<Visit> getScreeningVisits() {
+        return visitDataService.findByVisitTypeAndActualDateLess(VisitType.SCREENING, LocalDate.now());
     }
 
     @RequestMapping(value = "/getPrimeVacDate/{subjectId}", method = RequestMethod.GET)

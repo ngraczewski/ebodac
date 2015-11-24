@@ -19,7 +19,7 @@
         <tbody>
         <tr>
             <td class="col-md-1">
-                <select class="form-control" ui-select2 id="subjectId" ng-model="selectedSubject" ng-change="subjectChanged()" ng-options="subject.subjectId for subject in subjects">
+                <select class="form-control" ui-select2 id="subjectId" ng-model="selectedSubject" ng-change="subjectChanged()" ng-options="visit.subject as visit.subject.subjectId for visit in screeningVisits">
                     <option value=""></option>
                 </select>
             </td>
