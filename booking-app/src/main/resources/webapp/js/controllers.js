@@ -490,14 +490,14 @@
     });
 
     controllers.controller('BookingAppClinicVisitScheduleCtrl', function ($scope, $http, $filter) {
-        $scope.subjects = [];
+        $scope.screeningVisits = [];
         $scope.selectedSubject = {};
         $scope.primeVac = {};
         $scope.visitPlannedDates = {};
 
-        $http.get('../booking-app/schedule/getSubjects')
+        $http.get('../booking-app/schedule/getScreeningVisits')
         .success(function(data) {
-            $scope.subjects = data;
+            $scope.screeningVisits = data;
         });
 
         $scope.subjectChanged = function() {
