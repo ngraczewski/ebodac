@@ -429,6 +429,9 @@
         };
 
         $scope.savePrimeVaccinationSchedule = function() {
+            if($scope.form.dto.participantGender != "Female") {
+                $scope.form.dto.femaleChildBearingAge = "No";
+            }
             $scope.form.updated = PrimeVaccinationSchedule.addOrUpdate($scope.form.dto,
                 function success() {
                     $("#primeVaccinationSchedule").trigger('reloadGrid');
