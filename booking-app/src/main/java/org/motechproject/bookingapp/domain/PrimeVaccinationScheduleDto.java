@@ -45,14 +45,15 @@ public class PrimeVaccinationScheduleDto {
     }
 
     public PrimeVaccinationScheduleDto(VisitBookingDetails details) {
-        LocalDate actualScreeningDate = null;
+
+        LocalDate screeningDate = null;
         for (Visit visit : details.getSubject().getVisits()) {
             if (VisitType.SCREENING.equals(visit.getType())) {
-                actualScreeningDate = visit.getDate();
+                screeningDate = visit.getDate();
             }
         }
 
-        setActualScreeningDate(actualScreeningDate);
+        setActualScreeningDate(screeningDate);
         setStartTime(details.getStartTime());
         setParticipantId(details.getSubject().getSubjectId());
         setParticipantName(details.getSubject().getName());
