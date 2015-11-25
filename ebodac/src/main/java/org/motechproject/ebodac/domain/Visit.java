@@ -25,6 +25,7 @@ public class Visit {
     public static final String VISIT_TYPE_PROPERTY_NAME = "type";
     public static final String SUBJECT_PHONE_NUMBER_PROPERTY_NAME = "subject.phoneNumber";
     public static final String SUBJECT_ADDRESS_PROPERTY_NAME = "subject.address";
+    public static final String SUBJECT_NAME_PROPERTY_NAME = "subject.name";
     public static final String SUBJECT_PRIME_VACCINATION_DATE_PROPERTY_NAME = "subject.primerVaccinationDate";
 
     @NonEditable(display = false)

@@ -241,19 +241,18 @@ public interface VisitDataService extends MotechDataService<Visit> {
      *  Booking App Lookups
      */
 
-    @Lookup
-    List<Visit> findVisitsByTypeDateAndPrimerVaccinationDate(@LookupField(name = "type") VisitType visitType,
+    @Lookup(name = "Find Visits By Type Date Primer Vaccination Date And Participant Name")
+    List<Visit> findVisitsByTypeDatePrimerVaccinationDateAndSubjectName(@LookupField(name = "type") VisitType visitType,
                                                              @LookupField(name = "date", customOperator = Constants.Operators.NEQ) LocalDate date,
-                                                             @LookupField(name = "subject.primerVaccinationDate", customOperator = Constants.Operators.EQ) LocalDate primerVaccinationDate);
+                                                             @LookupField(name = "subject.primerVaccinationDate", customOperator = Constants.Operators.EQ) LocalDate primerVaccinationDate,
+                                                             @LookupField(name = "subject.name", customOperator = Constants.Operators.MATCHES) String name);
 
-    @Lookup(name = "Find Visits By Participant Id Type Date And Primer Vaccination Date")
-    List<Visit> findVisitsBySubjectIdTypeDateAndPrimerVaccinationDate(@LookupField(name = "subject.subjectId",
-            customOperator = Constants.Operators.MATCHES_CASE_INSENSITIVE) String subjectId,
-                                                                      @LookupField(name = "type") VisitType visitType,
-                                                                      @LookupField(name = "date",
-                                                                              customOperator = Constants.Operators.NEQ) LocalDate date,
-                                                                      @LookupField(name = "subject.primerVaccinationDate",
-                                                                              customOperator = Constants.Operators.EQ) LocalDate primerVaccinationDate);
+    @Lookup(name = "Find Visits By Participant Id Type Date Primer Vaccination Date And Participant Name")
+    List<Visit> findVisitsBySubjectIdTypeDatePrimerVaccinationDateAndSubjectName(@LookupField(name = "subject.subjectId", customOperator = Constants.Operators.MATCHES_CASE_INSENSITIVE) String subjectId,
+                                                                                 @LookupField(name = "type") VisitType visitType,
+                                                                                 @LookupField(name = "date", customOperator = Constants.Operators.NEQ) LocalDate date,
+                                                                                 @LookupField(name = "subject.primerVaccinationDate", customOperator = Constants.Operators.EQ) LocalDate primerVaccinationDate,
+                                                                                 @LookupField(name = "subject.name", customOperator = Constants.Operators.MATCHES) String name);
 
     @Lookup(name = "Find Visits By Participant Name Type Date And Primer Vaccination Date")
     List<Visit> findVisitsBySubjectNameTypeDateAndPrimerVaccinationDate(@LookupField(name = "subject.name",
