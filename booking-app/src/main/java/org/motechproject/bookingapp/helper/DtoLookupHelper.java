@@ -14,6 +14,8 @@ import java.util.Map;
 
 public final class DtoLookupHelper {
 
+    private static final String NOT_BLANK_REGEX = ".";
+
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private DtoLookupHelper() {
@@ -27,11 +29,17 @@ public final class DtoLookupHelper {
         }
 
         if (StringUtils.isBlank(settings.getLookup())) {
-            settings.setLookup("Find Visits By Type Date And Primer Vaccination Date");
+            settings.setLookup("Find Visits By Type Date Primer Vaccination Date And Participant Name");
+            fieldsMap.put(Visit.SUBJECT_NAME_PROPERTY_NAME, NOT_BLANK_REGEX);
         } else {
             String fields = settings.getFields();
             fieldsMap = OBJECT_MAPPER.readValue(fields, new TypeReference<HashMap>() {});
-            settings.setLookup(settings.getLookup() + " Type Date And Primer Vaccination Date");
+            if (settings.getLookup().equals("Find Visits By Participant Name")) {
+                settings.setLookup(settings.getLookup() + " Type Date And Primer Vaccination Date");
+            } else {
+                settings.setLookup(settings.getLookup() + " Type Date Primer Vaccination Date And Participant Name");
+                fieldsMap.put(Visit.SUBJECT_NAME_PROPERTY_NAME, NOT_BLANK_REGEX);
+            }
         }
 
         fieldsMap.put(Visit.VISIT_TYPE_PROPERTY_NAME, VisitType.SCREENING.toString());
