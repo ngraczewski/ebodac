@@ -328,23 +328,35 @@
         };
 
         $scope.saveScreening = function(ignoreLimitation) {
-            $http.post('../booking-app/screenings/new/' + ignoreLimitation, $scope.form.dto)
-            .success(function(data) {
-                if (data && (typeof(data) === 'string')) {
-                    jConfirm($scope.msg('bookingApp.screening.confirmMsg', data), $scope.msg('bookingApp.screening.confirmTitle'),
-                        function (response) {
-                            if (response) {
-                                $scope.saveScreening(true);
-                            }
-                        });
-                } else {
-                    $("#screenings").trigger('reloadGrid');
-                    $scope.screeningForPrint = data;
-                    $scope.form.dto = undefined;
+            var confirmMsg;
+
+            if ($scope.form.type == "add") {
+                confirmMsg = "bookingApp.screening.confirm.shouldScheduleScreening";
+            } else if ($scope.form.type == "edit") {
+                confirmMsg = "bookingApp.screening.confirm.shouldUpdateScreening";
+            }
+
+            motechConfirm(confirmMsg, "bookingApp.confirm", function(confirmed) {
+                if (confirmed) {
+                    $http.post('../booking-app/screenings/new/' + ignoreLimitation, $scope.form.dto)
+                    .success(function(data) {
+                        if (data && (typeof(data) === 'string')) {
+                            jConfirm($scope.msg('bookingApp.screening.confirmMsg', data), $scope.msg('bookingApp.screening.confirmTitle'),
+                                function (response) {
+                                    if (response) {
+                                        $scope.saveScreening(true);
+                                    }
+                                });
+                        } else {
+                            $("#screenings").trigger('reloadGrid');
+                            $scope.screeningForPrint = data;
+                            $scope.form.dto = undefined;
+                        }
+                    })
+                    .error(function(response) {
+                        motechAlert('bookingApp.screening.scheduleError', 'bookingApp.screening.error', response);
+                    });
                 }
-            })
-            .error(function(response) {
-                motechAlert('bookingApp.screening.scheduleError', 'bookingApp.screening.error', response);
             });
         };
 
@@ -429,14 +441,19 @@
         };
 
         $scope.savePrimeVaccinationSchedule = function() {
-            if($scope.form.dto.participantGender != "Female") {
-                $scope.form.dto.femaleChildBearingAge = "No";
-            }
-            $scope.form.updated = PrimeVaccinationSchedule.addOrUpdate($scope.form.dto,
-                function success() {
-                    $("#primeVaccinationSchedule").trigger('reloadGrid');
-                    $scope.form.dto = undefined;
-                });
+            motechConfirm("bookingApp.primeVaccination.confirm.shouldUpdatePrimeVaccination",
+                          "bookingApp.confirm", function(confirmed) {
+                if (confirmed) {
+                    if($scope.form.dto.participantGender != "Female") {
+                        $scope.form.dto.femaleChildBearingAge = "No";
+                    }
+                    $scope.form.updated = PrimeVaccinationSchedule.addOrUpdate($scope.form.dto,
+                        function success() {
+                            $("#primeVaccinationSchedule").trigger('reloadGrid');
+                            $scope.form.dto = undefined;
+                        });
+                }
+            })
         };
 
         $scope.reloadSelects = function() {
@@ -522,15 +539,20 @@
         });
 
         $scope.save = function() {
-            if ($scope.checkSubjectAndPrimeVacDate()) {
-                $http.get('../booking-app/schedule/savePlannedDates/' + $scope.selectedSubject.subjectId + '/' + $scope.primeVac.date)
-                .success(function(response) {
-                    motechAlert('bookingApp.schedule.plannedDates.saved', 'bookingApp.schedule.saved.success');
-                })
-                .error(function(response) {
-                    motechAlert('bookingApp.schedule.plannedDates.save.error', 'bookingApp.schedule.error', response);
-                });
-            }
+            motechConfirm("bookingApp.schedule.confirm.shouldSaveDates", "bookingApp.confirm",
+                          function(confirmed) {
+                if (confirmed) {
+                    if ($scope.checkSubjectAndPrimeVacDate()) {
+                        $http.get('../booking-app/schedule/savePlannedDates/' + $scope.selectedSubject.subjectId + '/' + $scope.primeVac.date)
+                        .success(function(response) {
+                            motechAlert('bookingApp.schedule.plannedDates.saved', 'bookingApp.schedule.saved.success');
+                        })
+                        .error(function(response) {
+                            motechAlert('bookingApp.schedule.plannedDates.save.error', 'bookingApp.schedule.error', response);
+                        });
+                    }
+                }
+            });
         }
 
         $scope.print = function() {
