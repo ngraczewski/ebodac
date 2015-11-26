@@ -21,47 +21,47 @@ public class Clinic {
     private String location;
 
     @UIDisplayable(position = 2)
-    @Field(displayName = "Amount of Rooms", required = true)
+    @Field(displayName = "Amount of Rooms", required = true, defaultValue = "1")
     private Integer numberOfRooms;
 
     @UIDisplayable(position = 3)
-    @Field
+    @Field(required = true, defaultValue = "5")
     private Integer maxScreeningVisits;
 
     @UIDisplayable(position = 4)
-    @Field
+    @Field(required = true, defaultValue = "5")
     private Integer maxPrimeVisits;
 
     @UIDisplayable(position = 5)
-    @Field
+    @Field(required = true, defaultValue = "10")
     private Integer maxPrimeFollowUpVisits;
 
     @UIDisplayable(position = 6)
-    @Field
+    @Field(required = true, defaultValue = "5")
     private Integer maxBoosterVisits;
 
     @UIDisplayable(position = 7)
-    @Field
+    @Field(required = true, defaultValue = "10")
     private Integer maxBoosterFirstFollowUpVisits;
 
     @UIDisplayable(position = 8)
-    @Field
+    @Field(required = true, defaultValue = "10")
     private Integer maxBoosterSecondFollowUpVisits;
 
     @UIDisplayable(position = 9)
-    @Field
+    @Field(required = true, defaultValue = "10")
     private Integer maxBoosterThirdFollowUpVisits;
 
     @UIDisplayable(position = 10)
-    @Field
+    @Field(required = true, defaultValue = "10")
     private Integer maxFirstLongTermFollowUpVisits;
 
     @UIDisplayable(position = 11)
-    @Field
+    @Field(required = true, defaultValue = "10")
     private Integer maxSecondLongTermFollowUpVisits;
 
     @UIDisplayable(position = 12)
-    @Field
+    @Field(required = true, defaultValue = "10")
     private Integer maxThirdLongTermFollowUpVisits;
 
     public Long getId() {
