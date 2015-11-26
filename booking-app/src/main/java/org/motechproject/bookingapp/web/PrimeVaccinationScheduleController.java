@@ -2,6 +2,7 @@ package org.motechproject.bookingapp.web;
 
 import org.motechproject.bookingapp.constants.BookingAppConstants;
 import org.motechproject.bookingapp.domain.PrimeVaccinationScheduleDto;
+import org.motechproject.bookingapp.exception.LimitationExceededException;
 import org.motechproject.bookingapp.helper.DtoLookupHelper;
 import org.motechproject.bookingapp.service.PrimeVaccinationScheduleService;
 import org.motechproject.bookingapp.web.domain.BookingGridSettings;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -41,10 +43,15 @@ public class PrimeVaccinationScheduleController {
         return primeVaccinationScheduleService.getPrimeVaccinationScheduleRecords(DtoLookupHelper.changeLookupForPrimeVaccinationSchedule(settings));
     }
 
-    @RequestMapping(value = "/primeVaccinationSchedule", method = RequestMethod.POST)
+    @RequestMapping(value = "/primeVaccinationSchedule/{ignoreLimitation}", method = RequestMethod.POST)
     @ResponseBody
-    public PrimeVaccinationScheduleDto updateVisitBookingDetails(@RequestBody PrimeVaccinationScheduleDto visitDto) {
-        return primeVaccinationScheduleService.createOrUpdateWithDto(visitDto);
+    public Object updateVisitBookingDetails(@PathVariable Boolean ignoreLimitation,
+                                                                 @RequestBody PrimeVaccinationScheduleDto visitDto) {
+        try {
+            return primeVaccinationScheduleService.createOrUpdateWithDto(visitDto, ignoreLimitation);
+        } catch (LimitationExceededException e) {
+            return e.getMessage();
+        }
     }
 
     @RequestMapping(value = "/getLookupsForPrimeVaccinationSchedule", method = RequestMethod.GET)

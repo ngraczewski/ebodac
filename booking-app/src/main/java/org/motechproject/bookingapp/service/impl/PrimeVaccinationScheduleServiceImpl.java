@@ -2,13 +2,16 @@ package org.motechproject.bookingapp.service.impl;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.motechproject.bookingapp.domain.Clinic;
 import org.motechproject.bookingapp.domain.PrimeVaccinationScheduleDto;
 import org.motechproject.bookingapp.domain.VisitBookingDetails;
+import org.motechproject.bookingapp.exception.LimitationExceededException;
 import org.motechproject.bookingapp.repository.ClinicDataService;
 import org.motechproject.bookingapp.repository.VisitBookingDetailsDataService;
 import org.motechproject.bookingapp.service.PrimeVaccinationScheduleService;
 import org.motechproject.bookingapp.util.PrimeVaccinationScheduleDtoUtil;
 import org.motechproject.bookingapp.web.domain.BookingGridSettings;
+import org.motechproject.commons.date.model.Time;
 import org.motechproject.ebodac.domain.Visit;
 import org.motechproject.ebodac.domain.VisitType;
 import org.motechproject.ebodac.repository.VisitDataService;
@@ -75,7 +78,12 @@ public class PrimeVaccinationScheduleServiceImpl implements PrimeVaccinationSche
 
     @Override
     @Transactional
-    public PrimeVaccinationScheduleDto createOrUpdateWithDto(PrimeVaccinationScheduleDto dto) {
+    public PrimeVaccinationScheduleDto createOrUpdateWithDto(PrimeVaccinationScheduleDto dto, Boolean ignoreLimitation) {
+
+        if (!ignoreLimitation) {
+            checkNumberOfPatients(dto);
+        }
+
         VisitBookingDetails visitBookingDetails = visitBookingDetailsDataService.findById(dto.getVisitBookingDetailsId());
 
         VisitBookingDetails updated;
@@ -143,6 +151,47 @@ public class PrimeVaccinationScheduleServiceImpl implements PrimeVaccinationSche
             return null;
         } else {
             return objectMapper.readValue(json, new TypeReference<LinkedHashMap>() {});
+        }
+    }
+
+    private void checkNumberOfPatients(PrimeVaccinationScheduleDto dto) {
+
+        List<VisitBookingDetails> visits = visitBookingDetailsDataService
+                .findByBookingPlannedDateClinicIdAndVisitType(dto.getDate(), dto.getClinicId(),
+                        VisitType.PRIME_VACCINATION_DAY);
+
+        if (visits != null) {
+
+            Clinic clinic = clinicDataService.findById(dto.getClinicId());
+            int numberOfRooms = clinic.getNumberOfRooms();
+            int maxVisits = clinic.getMaxPrimeVisits() * numberOfRooms;
+            int patients = 0;
+
+            for (VisitBookingDetails visit : visits) {
+                if (visit.getId().equals(dto.getVisitBookingDetailsId())) {
+                    maxVisits++;
+                } else {
+                    Time startTime = dto.getStartTime();
+                    Time endTime = dto.getEndTime();
+
+                    if (startTime.isBefore(visit.getStartTime())) {
+                        if (visit.getStartTime().isBefore(endTime)) {
+                            patients++;
+                        }
+                    } else {
+                        if (startTime.isBefore(visit.getEndTime())) {
+                            patients++;
+                        }
+                    }
+                }
+            }
+
+            if (visits.size() >= maxVisits) {
+                throw new LimitationExceededException("Maximum amount of Prime Vaccination Visits exceeded for this day");
+            }
+            if (patients >= numberOfRooms) {
+                throw new LimitationExceededException("Too many Patients at the same time");
+            }
         }
     }
 }

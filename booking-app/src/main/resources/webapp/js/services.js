@@ -16,10 +16,4 @@
         return $resource('../booking-app/sites', {}, {});
     });
 
-    services.factory('PrimeVaccinationSchedule', function($resource) {
-        return $resource('../booking-app/primeVaccinationSchedule', {}, {
-            'addOrUpdate': { url: '../booking-app/primeVaccinationSchedule', method: 'POST' },
-        });
-    });
-
 }());

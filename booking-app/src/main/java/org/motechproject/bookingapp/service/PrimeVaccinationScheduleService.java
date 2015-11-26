@@ -10,5 +10,5 @@ public interface PrimeVaccinationScheduleService {
 
     Records<PrimeVaccinationScheduleDto> getPrimeVaccinationScheduleRecords(BookingGridSettings settings) throws IOException;
 
-    PrimeVaccinationScheduleDto createOrUpdateWithDto(PrimeVaccinationScheduleDto visitDto);
+    PrimeVaccinationScheduleDto createOrUpdateWithDto(PrimeVaccinationScheduleDto visitDto, Boolean ignoreLimitation);
 }

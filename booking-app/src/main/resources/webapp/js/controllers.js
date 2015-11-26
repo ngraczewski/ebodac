@@ -330,15 +330,8 @@
         $scope.saveScreening = function(ignoreLimitation) {
             var confirmMsg;
 
-            if ($scope.form.type == "add") {
-                confirmMsg = "bookingApp.screening.confirm.shouldScheduleScreening";
-            } else if ($scope.form.type == "edit") {
-                confirmMsg = "bookingApp.screening.confirm.shouldUpdateScreening";
-            }
-
-            motechConfirm(confirmMsg, "bookingApp.confirm", function(confirmed) {
-                if (confirmed) {
-                    $http.post('../booking-app/screenings/new/' + ignoreLimitation, $scope.form.dto)
+            function sendRequest() {
+                $http.post('../booking-app/screenings/new/' + ignoreLimitation, $scope.form.dto)
                     .success(function(data) {
                         if (data && (typeof(data) === 'string')) {
                             jConfirm($scope.msg('bookingApp.screening.confirmMsg', data), $scope.msg('bookingApp.screening.confirmTitle'),
@@ -354,10 +347,25 @@
                         }
                     })
                     .error(function(response) {
-                        motechAlert('bookingApp.screening.scheduleError', 'bookingApp.screening.error', response);
+                        motechAlert('bookingApp.screening.scheduleError', 'bookingApp.error', response);
                     });
-                }
-            });
+            }
+
+            if ($scope.form.type == "add") {
+                confirmMsg = "bookingApp.screening.confirm.shouldScheduleScreening";
+            } else if ($scope.form.type == "edit") {
+                confirmMsg = "bookingApp.screening.confirm.shouldUpdateScreening";
+            }
+
+            if (ignoreLimitation) {
+                sendRequest();
+            } else {
+                motechConfirm(confirmMsg, "bookingApp.confirm", function(confirmed) {
+                    if (confirmed) {
+                        sendRequest();
+                    }
+                });
+            }
         };
 
         $scope.formIsFilled = function() {
@@ -423,7 +431,7 @@
         }
     });
 
-    controllers.controller('BookingAppPrimeVaccinationCtrl', function ($scope, $timeout, PrimeVaccinationSchedule) {
+    controllers.controller('BookingAppPrimeVaccinationCtrl', function ($scope, $timeout, $http) {
 
         $scope.getLookups("../booking-app/getLookupsForPrimeVaccinationSchedule");
 
@@ -432,28 +440,36 @@
             $scope.form.dto = {};
         };
 
-        $scope.editPrimeVaccinationSchedule = function(id) {
-            $scope.newForm();
-            $scope.form.dto = PrimeVaccinationSchedule.get({id: id}, function() {
-                $('#primeVaccinationScheduleModal').modal('show');
-                $scope.reloadSelects();
-            });
-        };
+        $scope.savePrimeVaccinationSchedule = function(ignoreLimitation) {
 
-        $scope.savePrimeVaccinationSchedule = function() {
-            motechConfirm("bookingApp.primeVaccination.confirm.shouldUpdatePrimeVaccination",
-                          "bookingApp.confirm", function(confirmed) {
-                if (confirmed) {
-                    if($scope.form.dto.participantGender != "Female") {
-                        $scope.form.dto.femaleChildBearingAge = "No";
-                    }
-                    $scope.form.updated = PrimeVaccinationSchedule.addOrUpdate($scope.form.dto,
-                        function success() {
+            function sendRequest() {
+                $http.post('../booking-app/primeVaccinationSchedule/' + ignoreLimitation, $scope.form.dto)
+                    .success(function(data) {
+                        if (data && (typeof(data) === 'string')) {
+                            jConfirm($scope.msg('bookingApp.primeVaccination.confirmMsg', data), $scope.msg('bookingApp.primeVaccination.confirmTitle'),
+                                function (response) {
+                                    if (response) {
+                                        $scope.savePrimeVaccinationSchedule(true);
+                                    }
+                                });
+                        } else {
                             $("#primeVaccinationSchedule").trigger('reloadGrid');
                             $scope.form.dto = undefined;
-                        });
-                }
-            })
+                        }
+                    })
+                    .error(function(response) {
+                        motechAlert('bookingApp.primeVaccination.updateError', 'bookingApp.error', response);
+                    });
+            }
+
+            if (ignoreLimitation) {
+                sendRequest();
+            } else {
+                motechConfirm("bookingApp.primeVaccination.confirm.shouldUpdatePrimeVaccination",
+                              "bookingApp.confirm", function(confirmed) {
+                    sendRequest();
+                })
+            }
         };
 
         $scope.reloadSelects = function() {
