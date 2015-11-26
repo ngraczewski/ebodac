@@ -3,12 +3,12 @@
 
     /* App Module */
     var bookingApp = angular.module('bookingApp', ['bookingApp.controllers', 'bookingApp.services',
-        'bookingApp.directives', 'motech-dashboard', 'mds', 'ui.directives']), id;
+        'bookingApp.directives', 'motech-dashboard', 'mds', 'mds.utils', 'ui.directives']), clinicId;
 
     $.ajax({
-        url: '../mds/entities/getEntity/Booking App/Screening',
+        url: '../mds/entities/getEntity/Booking App/Clinic',
         success:  function(data) {
-            id = data.id;
+            clinicId = data.id;
         },
         async: false
     });
@@ -30,7 +30,8 @@
             .when('/bookingApp/reschedule', {
                 templateUrl: '../booking-app/resources/partials/reschedule.html',
                 controller: 'BookingAppRescheduleCtrl'
-            });
+            })
+            .when('/bookingApp/visitLimitation', { redirectTo: '/mds/dataBrowser/' + clinicId + '/booking-app' });
     });
 
 }());

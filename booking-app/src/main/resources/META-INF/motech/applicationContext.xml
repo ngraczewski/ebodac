@@ -28,8 +28,12 @@
         <property name="defaultURL" value="/bookingApp/screening"/>
     </bean>
 
-    <bean id="bookingAppSettings" class="org.motechproject.server.config.SettingsFacade"
-        autowire="byType">
+    <bean id="bookingAppSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
+        <property name="rawConfigFiles">
+            <list>
+                <value>classpath:custom-ui.js</value>
+            </list>
+        </property>
     </bean>
 
 </beans>
