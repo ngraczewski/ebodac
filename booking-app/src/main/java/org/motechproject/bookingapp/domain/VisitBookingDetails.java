@@ -12,6 +12,7 @@ public class VisitBookingDetails {
 
     public static final String VISIT_TYPE_PROPERTY_NAME = "visit.type";
     public static final String SUBJECT_PRIME_VACCINATION_DATE_PROPERTY_NAME = "subject.primerVaccinationDate";
+    public static final String SUBJECT_NAME_PROPERTY_NAME = "subject.name";
 
     @Field
     private Long id;
