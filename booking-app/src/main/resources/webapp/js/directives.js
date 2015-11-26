@@ -172,6 +172,16 @@
                     }
                 });
 
+                scope.$watch("lookupRefresh", function () {
+                    $('#' + attrs.id).jqGrid('setGridParam', {
+                        page: 1,
+                        postData: {
+                            fields: JSON.stringify(scope.lookupBy),
+                            lookup: (scope.selectedLookup) ? scope.selectedLookup.lookupName : ""
+                        }
+                    }).trigger('reloadGrid');
+                });
+
             }
         };
     });

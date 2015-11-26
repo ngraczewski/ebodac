@@ -49,17 +49,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group" ng-if="selectedLookup !== undefined">
-                        <label class="col-sm-6 control-label" for="exportWithLookups">
-                            {{msg('bookingApp.form.exportWithLookup')}}
-                        </label>
-                        <div class="form-inline col-md-4 col-sm-4">
-                            <div class="btn-group" id="exportWithLookups">
-                                <input type="checkbox" ng-model="checkboxModel.exportWithLookup" ng-checked="checkboxModel.exportWithLookup">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group" ng-if="selectedFilter !== undefined && selectedFilter.dateFilter !== undefined">
+                    <div class="form-group" ng-if="selectedLookup !== undefined || (selectedFilter !== undefined && selectedFilter.dateFilter !== undefined)">
                         <label class="col-sm-6 control-label" for="exportWithFilter">
                             {{msg('bookingApp.form.exportWithFilter')}}
                         </label>

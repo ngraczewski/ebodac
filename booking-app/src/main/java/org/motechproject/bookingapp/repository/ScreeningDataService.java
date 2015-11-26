@@ -7,6 +7,7 @@ import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.query.QueryParams;
 import org.motechproject.mds.service.MotechDataService;
+import org.motechproject.mds.util.Constants;
 
 import java.util.List;
 
@@ -21,6 +22,19 @@ public interface ScreeningDataService extends MotechDataService<Screening> {
     long countFindByDate(Range<LocalDate> dateRange);
 
     @Lookup
-    List<Screening> findByDateAndClinicId(@LookupField(name = "date") LocalDate date,
-                                          @LookupField(name = "clinic.id") Long clinicId);
+    List<Screening> findByDateAndClinicId(@LookupField(name = "date") LocalDate date, @LookupField(name = "clinic.id") Long clinicId);
+
+    @Lookup
+    List<Screening> findByClinicLocationAndDate(@LookupField(name = "date") Range<LocalDate> date,
+                                                @LookupField(name = "clinic.location", customOperator = Constants.Operators.MATCHES_CASE_INSENSITIVE) String location);
+
+    @Lookup
+    List<Screening> findByClinicLocation(@LookupField(name = "clinic.location", customOperator = Constants.Operators.MATCHES_CASE_INSENSITIVE) String location);
+
+    @Lookup
+    List<Screening> findByVolunteerName(@LookupField(name = "volunteer.name", customOperator = Constants.Operators.MATCHES_CASE_INSENSITIVE) String volunteerName);
+
+    @Lookup
+    List<Screening> findByVolunteerNameAndDate(@LookupField(name = "date") Range<LocalDate> date,
+                                               @LookupField(name = "volunteer.name", customOperator = Constants.Operators.MATCHES_CASE_INSENSITIVE) String volunteerName);
 }

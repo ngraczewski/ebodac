@@ -45,6 +45,9 @@ public final class BookingAppConstants {
     public static final List<String> AVAILABLE_LOOKUPS_FOR_PRIME_VACCINATION_SCHEDULE = new ArrayList<>(Arrays.asList(
             "Find Visits By Participant Id", "Find Visits By Participant Name"));
 
+    public static final List<String> AVAILABLE_LOOKUPS_FOR_SCREENINGS = new ArrayList<>(Arrays.asList(
+            "Find By Clinic Location", "Find By Volunteer Name"));
+
     private BookingAppConstants() {
     }
 }
