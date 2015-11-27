@@ -5,11 +5,9 @@ import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.motechproject.bookingapp.constants.BookingAppConstants;
-import org.motechproject.bookingapp.domain.DateFilter;
 import org.motechproject.bookingapp.domain.PrimeVaccinationScheduleDto;
 import org.motechproject.bookingapp.domain.Screening;
 import org.motechproject.bookingapp.domain.VisitBookingDetails;
@@ -17,7 +15,6 @@ import org.motechproject.bookingapp.helper.DtoLookupHelper;
 import org.motechproject.bookingapp.template.PdfExportTemplate;
 import org.motechproject.bookingapp.template.XlsExportTemplate;
 import org.motechproject.bookingapp.web.domain.BookingGridSettings;
-import org.motechproject.commons.api.Range;
 import org.motechproject.ebodac.exception.EbodacExportException;
 import org.motechproject.ebodac.exception.EbodacLookupException;
 import org.motechproject.ebodac.service.ExportService;
@@ -35,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -55,27 +51,8 @@ public class ExportController {
     public void exportScreening(BookingGridSettings settings, @RequestParam String exportRecords,
                                 @RequestParam String outputFormat, HttpServletResponse response) throws IOException {
 
-        if (settings.getDateFilter() != null) {
-            DateFilter dateFilter = settings.getDateFilter();
-            Map<String, Object> fieldsMap = new HashMap<>();
-            Map<String, String> rangeMap = new HashMap<>();
-
-            if (DateFilter.DATE_RANGE.equals(dateFilter)) {
-                rangeMap.put("min", settings.getStartDate());
-                rangeMap.put("max", settings.getEndDate());
-            } else {
-                Range<LocalDate> dateRange = dateFilter.getRange();
-                rangeMap.put("min", dateRange.getMin().toString(BookingAppConstants.SIMPLE_DATE_FORMAT));
-                rangeMap.put("max", dateRange.getMax().toString(BookingAppConstants.SIMPLE_DATE_FORMAT));
-            }
-
-            fieldsMap.put("date", rangeMap);
-
-            settings.setFields(objectMapper.writeValueAsString(fieldsMap));
-            settings.setLookup("Find By Date");
-        }
-
-        exportEntity(settings, exportRecords, outputFormat, response, BookingAppConstants.SCREENING_NAME,
+        BookingGridSettings newSettings = DtoLookupHelper.changeLookupForScreening(settings);
+        exportEntity(newSettings, exportRecords, outputFormat, response, BookingAppConstants.SCREENING_NAME,
                 null, Screening.class, BookingAppConstants.SCREENING_FIELDS_MAP);
     }
 

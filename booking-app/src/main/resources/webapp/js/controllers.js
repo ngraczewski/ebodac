@@ -11,13 +11,11 @@
         $scope.actualExportColumns = 'All';
         $scope.exportFormat = 'pdf';
         $scope.checkboxModel = {
-            exportWithLookup : true,
             exportWithOrder : false,
             exportWithFilter : true
         };
 
         $scope.exportEntityInstances = function () {
-            $scope.checkboxModel.exportWithLookup = true;
             $scope.checkboxModel.exportWithFilter = true;
             $('#exportBookingAppInstanceModal').modal('show');
         };
@@ -36,7 +34,7 @@
         };
 
         $scope.exportInstanceWithUrl = function(url) {
-            if ($scope.selectedLookup !== undefined && $scope.checkboxModel.exportWithLookup === true) {
+            if ($scope.selectedLookup !== undefined && $scope.checkboxModel.exportWithFilter === true) {
                 url = url + "&lookup=" + (($scope.selectedLookup) ? $scope.selectedLookup.lookupName : "");
                 url = url + "&fields=" + encodeURIComponent(JSON.stringify($scope.lookupBy));
             }
@@ -274,6 +272,8 @@
     });
 
     controllers.controller('BookingAppScreeningCtrl', function ($scope, $timeout, $http, Screenings, Sites) {
+
+        $scope.getLookups("../booking-app/screenings/getLookupsForScreening");
 
         $scope.selectedFilter = {};
 

@@ -12,6 +12,8 @@ import org.motechproject.mds.annotations.Ignore;
 @Entity(maxFetchDepth = 3)
 public class Screening {
 
+    public static final String DATE_PROPERTY_NAME = "date";
+
     @Field
     private Long id;
 

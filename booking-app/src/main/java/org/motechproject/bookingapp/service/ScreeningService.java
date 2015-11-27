@@ -3,13 +3,15 @@ package org.motechproject.bookingapp.service;
 import org.joda.time.LocalDate;
 import org.motechproject.bookingapp.domain.Screening;
 import org.motechproject.bookingapp.domain.ScreeningDto;
+import org.motechproject.bookingapp.web.domain.BookingGridSettings;
 import org.motechproject.commons.api.Range;
+import org.motechproject.ebodac.web.domain.Records;
 
-import java.util.List;
+import java.io.IOException;
 
 public interface ScreeningService {
 
-    List<Screening> getScreenings(int page, int pageSize, String sortColumn, String sortDirection, Range<LocalDate> dateRange);
+    Records<Screening> getScreenings(BookingGridSettings bookingGridSettings) throws IOException;
 
     long countScreeningsForDateRange(Range<LocalDate> dateRange);
 

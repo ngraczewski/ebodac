@@ -1,7 +1,8 @@
 package org.motechproject.bookingapp.service.impl;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.joda.time.LocalDate;
 import org.motechproject.bookingapp.domain.Clinic;
 import org.motechproject.bookingapp.domain.Screening;
@@ -13,15 +14,21 @@ import org.motechproject.bookingapp.repository.ScreeningDataService;
 import org.motechproject.bookingapp.repository.VolunteerDataService;
 import org.motechproject.bookingapp.service.ScreeningService;
 import org.motechproject.bookingapp.util.ScreeningValidator;
+import org.motechproject.bookingapp.web.domain.BookingGridSettings;
 import org.motechproject.commons.api.Range;
 import org.motechproject.commons.date.model.Time;
+import org.motechproject.ebodac.service.LookupService;
+import org.motechproject.ebodac.util.QueryParamsBuilder;
+import org.motechproject.ebodac.web.domain.Records;
 import org.motechproject.mds.query.QueryParams;
-import org.motechproject.mds.util.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service("screeningService")
 public class ScreeningServiceImpl implements ScreeningService {
@@ -35,19 +42,17 @@ public class ScreeningServiceImpl implements ScreeningService {
     @Autowired
     private ClinicDataService clinicDataService;
 
+    @Autowired
+    private LookupService lookupService;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
+
     @Override
     @Transactional
-    public List<Screening> getScreenings(int page, int pageSize, String sortColumn, String sortDirection, Range<LocalDate> dateRange) {
-
-        QueryParams queryParams;
-
-        if (StringUtils.isNotBlank(sortColumn) && StringUtils.isNotBlank(sortDirection)) {
-            queryParams = new QueryParams(page, pageSize, new Order(sortColumn, sortDirection));
-        } else {
-            queryParams = new QueryParams(page, pageSize);
-        }
-
-        return screeningDataService.findByDate(dateRange, queryParams);
+    public Records<Screening> getScreenings(BookingGridSettings bookingGridSettings) throws IOException {
+        QueryParams queryParams = QueryParamsBuilder.buildQueryParams(bookingGridSettings, getFields(bookingGridSettings.getFields()));
+        Records<Screening> screeningRecords = lookupService.getEntities(Screening.class, bookingGridSettings.getLookup(), bookingGridSettings.getFields(), queryParams);
+        return screeningRecords;
     }
 
     @Override
@@ -140,5 +145,13 @@ public class ScreeningServiceImpl implements ScreeningService {
         screening.setStartTime(startTime);
         screening.setEndTime(endTime);
         screening.setClinic(clinic);
+    }
+
+    private Map<String, Object> getFields(String json) throws IOException {
+        if (json == null) {
+            return null;
+        } else {
+            return objectMapper.readValue(json, new TypeReference<LinkedHashMap>() {});
+        }
     }
 }
