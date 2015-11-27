@@ -26,6 +26,14 @@
             </map>
         </constructor-arg>
         <property name="defaultURL" value="/bookingApp/screening"/>
+        <property name="roleForAccess">
+            <list>
+                <value>screeningBookingTab</value>
+                <value>primeVaccinationBookingTab</value>
+                <value>clinicVisitBookingTab</value>
+                <value>bookingAdvancedSettings</value>
+            </list>
+        </property>
     </bean>
 
     <bean id="bookingAppSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
