@@ -140,8 +140,8 @@
                         $('#screeningTable .ui-jqgrid-btable').addClass("table-lightblue");
                     },
                     pager: "#pager",
-                    rowNum: 10,
-                    rowList: [10, 20, 30],
+                    rowNum: 50,
+                    rowList: [10, 20, 50, 100],
                     prmNames: {
                         sort: 'sortColumn',
                         order: 'sortDirection'
@@ -248,8 +248,8 @@
                         $('#primeVaccinationTable .ui-jqgrid-btable').addClass("table-lightblue");
                     },
                     pager: "#pager",
-                    rowNum: 10,
-                    rowList: [10, 20, 30],
+                    rowNum: 50,
+                    rowList: [10, 20, 50, 100],
                     sortname: null,
                     sortorder: "desc",
                     viewrecords: true,
