@@ -2,6 +2,7 @@ package org.motechproject.bookingapp.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.NonEditable;
 
 @Entity
 public class Volunteer {
@@ -11,6 +12,10 @@ public class Volunteer {
 
     @Field(required = true)
     private String name;
+
+    @NonEditable(display = false)
+    @Field
+    private String owner;
 
     public Volunteer() {
     }
@@ -35,4 +40,11 @@ public class Volunteer {
         this.name = name;
     }
 
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
 }

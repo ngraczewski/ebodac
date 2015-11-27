@@ -3,6 +3,7 @@ package org.motechproject.bookingapp.domain;
 import org.motechproject.ebodac.domain.VisitType;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.NonEditable;
 
 import javax.jdo.annotations.Unique;
 
@@ -15,6 +16,10 @@ public class VisitScheduleOffset {
 
     @Field(required = true)
     private Integer timeOffset;
+
+    @NonEditable(display = false)
+    @Field
+    private String owner;
 
     public VisitType getVisitType() {
         return visitType;
@@ -30,5 +35,13 @@ public class VisitScheduleOffset {
 
     public void setTimeOffset(Integer timeOffset) {
         this.timeOffset = timeOffset;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }

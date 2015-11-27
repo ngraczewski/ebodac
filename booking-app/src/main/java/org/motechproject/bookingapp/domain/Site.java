@@ -3,6 +3,7 @@ package org.motechproject.bookingapp.domain;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.NonEditable;
 
 import javax.jdo.annotations.Persistent;
 import java.util.List;
@@ -20,6 +21,10 @@ public class Site {
 
     @Field(required = true)
     private String siteId;
+
+    @NonEditable(display = false)
+    @Field
+    private String owner;
 
     public Long getId() {
         return id;
@@ -43,6 +48,14 @@ public class Site {
 
     public void setSiteId(String siteId) {
         this.siteId = siteId;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     @Override
