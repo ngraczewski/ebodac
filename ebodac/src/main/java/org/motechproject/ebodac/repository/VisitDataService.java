@@ -241,6 +241,10 @@ public interface VisitDataService extends MotechDataService<Visit> {
      *  Booking App Lookups
      */
 
+    @Lookup
+    Visit findVisitBySubjectIdAndType(@LookupField(name = "subject.subjectId") String subjectId,
+                                      @LookupField(name = "type") VisitType type);
+
     @Lookup(name = "Find Visits By Type Date Primer Vaccination Date And Participant Name")
     List<Visit> findVisitsByTypeDatePrimerVaccinationDateAndSubjectName(@LookupField(name = "type") VisitType visitType,
                                                              @LookupField(name = "date", customOperator = Constants.Operators.NEQ) LocalDate date,

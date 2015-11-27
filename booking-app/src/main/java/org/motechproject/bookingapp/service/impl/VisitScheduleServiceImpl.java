@@ -25,6 +25,10 @@ import java.util.Set;
 @Service("visitScheduleService")
 public class VisitScheduleServiceImpl implements VisitScheduleService {
 
+    public static final int ONE_DAY = 1;
+    public static final int TWO_WEEKS = 14;
+    public static final int FOUR_WEEKS = 28;
+
     @Autowired
     private SubjectDataService subjectDataService;
 
@@ -35,32 +39,44 @@ public class VisitScheduleServiceImpl implements VisitScheduleService {
     private VisitScheduleOffsetService visitScheduleOffsetService;
 
     @Override
-    public LocalDate getPrimeVaccinationDate(String subjectId) {
+    public Map<String, String> getPrimeVaccinationDateAndDateRange(String subjectId) {
+
         Subject subject = subjectDataService.findSubjectBySubjectId(subjectId);
 
-        if (subject == null) {
-            return null;
-        }
+        LocalDate primeVacDate = null;
+        LocalDate earliestDate = null;
+        LocalDate latestDate = null;
 
-        if (subject.getPrimerVaccinationDate() != null) {
-            return subject.getPrimerVaccinationDate();
-        }
+        if (subject != null) {
+            VisitBookingDetails details = getPrimerVaccinationDetails(subject);
 
-        if (subject.getVisits() != null) {
-            for (Visit visit : subject.getVisits()) {
-                if (VisitType.PRIME_VACCINATION_DAY.equals(visit.getType())) {
-                    VisitBookingDetails visitBookingDetails = visitBookingDetailsService.findByVisitId(visit.getId());
+            if (subject.getPrimerVaccinationDate() != null) {
+                primeVacDate = subject.getPrimerVaccinationDate();
+            } else {
+                primeVacDate = details.getBookingActualDate();
+            }
 
-                    if (visitBookingDetails != null) {
-                        return visitBookingDetails.getBookingActualDate();
-                    }
-
-                    return null;
+            LocalDate screeningDate = getScreeningDate(subject);
+            if (screeningDate != null) {
+                if (!isFemaleChildBearingAge(details)) {
+                    earliestDate = screeningDate.plusDays(ONE_DAY);
+                } else {
+                    earliestDate = screeningDate.plusDays(TWO_WEEKS);
                 }
+                latestDate = screeningDate.plusDays(FOUR_WEEKS);
             }
         }
 
-        return null;
+        Map<String, String> dates = new HashMap<>();
+        dates.put("primeVacDate", primeVacDate != null ?
+                primeVacDate.toString(BookingAppConstants.SIMPLE_DATE_FORMAT) : "");
+        dates.put("earliestDate", earliestDate != null ?
+                earliestDate.toString(BookingAppConstants.SIMPLE_DATE_FORMAT) : "");
+        dates.put("latestDate", latestDate != null ?
+                latestDate.toString(BookingAppConstants.SIMPLE_DATE_FORMAT) : "");
+
+        return dates;
+
     }
 
     @Override
@@ -123,14 +139,24 @@ public class VisitScheduleServiceImpl implements VisitScheduleService {
             throw new VisitScheduleException("Cannot calculate Planned Dates, because Prime Vaccination Date is empty");
         }
 
+        LocalDate screeningDate = null;
+
         for (Visit visit : visits) {
-            if (!VisitType.UNSCHEDULED_VISIT.equals(visit.getType()) && !VisitType.SCREENING.equals(visit.getType())) {
-                visitIds.add(visit.getId());
-                visitList.add(visit);
+            if (!VisitType.UNSCHEDULED_VISIT.equals(visit.getType())) {
+                if (VisitType.SCREENING.equals(visit.getType())) {
+                    screeningDate = visit.getDate();
+                } else {
+                    visitIds.add(visit.getId());
+                    visitList.add(visit);
+
+                }
             }
         }
 
         Map<VisitType, VisitBookingDetails> visitBookingDetailsMap = visitBookingDetailsService.findByVisitIdsAsMap(visitIds);
+
+        validateDate(primeVaccinationDate, screeningDate, visitBookingDetailsMap.get(VisitType.PRIME_VACCINATION_DAY));
+
         Map<VisitType, VisitScheduleOffset> offsetMap = visitScheduleOffsetService.getAllAsMap();
 
         for (Visit visit : visitList) {
@@ -153,5 +179,54 @@ public class VisitScheduleServiceImpl implements VisitScheduleService {
         }
 
         return visitBookingDetailsMap;
+    }
+
+    private void validateDate(LocalDate date, LocalDate screeningDate, VisitBookingDetails details) {
+
+        LocalDate earliestDate;
+        LocalDate latestDate;
+
+        if (!isFemaleChildBearingAge(details)) {
+            earliestDate = screeningDate.plusDays(ONE_DAY);
+        } else {
+            earliestDate = screeningDate.plusDays(TWO_WEEKS);
+        }
+        latestDate = screeningDate.plusDays(FOUR_WEEKS);
+
+        if (date.isBefore(earliestDate) || date.isAfter(latestDate)) {
+            throw new IllegalArgumentException(String.format("The date should be between %s and %s but is %s",
+                    earliestDate, latestDate, date));
+        }
+    }
+
+    private boolean isFemaleChildBearingAge(VisitBookingDetails details) {
+        return details != null && details.getFemaleChildBearingAge() != null && details.getFemaleChildBearingAge();
+    }
+
+    private LocalDate getScreeningDate(Subject subject) {
+        LocalDate screeningDate = null;
+
+        for (Visit visit : subject.getVisits()) {
+            if (VisitType.SCREENING.equals(visit.getType())) {
+                screeningDate = visit.getDate();
+            }
+        }
+
+        if (screeningDate == null) {
+            throw new VisitScheduleException(String.format("Couldn't save Planned Dates, because Participant with ID:" +
+                    "%s didn't participate in screening visit", subject));
+        }
+        return screeningDate;
+    }
+
+    private VisitBookingDetails getPrimerVaccinationDetails(Subject subject) {
+        if (subject.getVisits() != null) {
+            for (Visit visit : subject.getVisits()) {
+                if (VisitType.PRIME_VACCINATION_DAY.equals(visit.getType())) {
+                    return visitBookingDetailsService.findByVisitId(visit.getId());
+                }
+            }
+        }
+        return null;
     }
 }

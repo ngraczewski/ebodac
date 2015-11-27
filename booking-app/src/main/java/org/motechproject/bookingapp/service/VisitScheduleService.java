@@ -6,7 +6,7 @@ import java.util.Map;
 
 public interface VisitScheduleService {
 
-    LocalDate getPrimeVaccinationDate(String subjectId);
+    Map<String, String> getPrimeVaccinationDateAndDateRange(String subjectId);
 
     Map<String, String> calculatePlannedVisitDates(String subjectId, LocalDate primeVaccinationDate);
 

@@ -30,7 +30,7 @@
                 {{primeVac.date}}
             </td>
             <td ng-if="!selectedSubject.primerVaccinationDate" class="col-md-1">
-                <input type="text" class="form-control" mds-date-picker ng-model="primeVac.date">
+                <input type="text" class="form-control" clinic-visit-schedule-date-picker min="dateRange.min" max="dateRange.max" ng-model="primeVac.date">
             </td>
             <td>
                 {{visitPlannedDates.PRIME_VACCINATION_FOLLOW_UP_VISIT}}
