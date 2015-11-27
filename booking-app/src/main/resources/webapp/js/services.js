@@ -7,8 +7,7 @@
 
     services.factory('Screenings', function($resource) {
         return $resource('../booking-app/screenings', {}, {
-            'get': {url: '../booking-app/screenings/:id', method: 'GET'},
-            'getDefaultFilter': {url: '../booking-app/screenings/getDefaultDateFilter', method: 'GET'}
+            'get': {url: '../booking-app/screenings/:id', method: 'GET'}
         });
     });
 
