@@ -18,7 +18,7 @@ public class Site {
     @Persistent(mappedBy = "site")
     private List<Clinic> clinics;
 
-    @Field
+    @Field(required = true)
     private String siteId;
 
     public Long getId() {
@@ -43,5 +43,10 @@ public class Site {
 
     public void setSiteId(String siteId) {
         this.siteId = siteId;
+    }
+
+    @Override
+    public String toString() {
+        return siteId;
     }
 }

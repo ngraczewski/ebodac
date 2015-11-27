@@ -8,6 +8,8 @@ import java.util.Map;
 
 public final class BookingAppConstants {
 
+    public static final String UI_CONFIG = "custom-ui.js";
+
     public static final String SIMPLE_DATE_FORMAT = "yyyy-MM-dd";
 
     public static final String PDF_EXPORT_FORMAT="pdf";

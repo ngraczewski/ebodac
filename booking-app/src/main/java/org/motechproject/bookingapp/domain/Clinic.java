@@ -3,6 +3,7 @@ package org.motechproject.bookingapp.domain;
 import org.codehaus.jackson.annotate.JsonBackReference;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.NonEditable;
 import org.motechproject.mds.annotations.UIDisplayable;
 
 @Entity(maxFetchDepth = 2)
@@ -63,6 +64,10 @@ public class Clinic {
     @UIDisplayable(position = 12)
     @Field(required = true, defaultValue = "10")
     private Integer maxThirdLongTermFollowUpVisits;
+
+    @NonEditable(display = false)
+    @Field
+    private String owner;
 
     public Long getId() {
         return id;
@@ -174,6 +179,19 @@ public class Clinic {
 
     public void setMaxThirdLongTermFollowUpVisits(Integer maxThirdLongTermFollowUpVisits) {
         this.maxThirdLongTermFollowUpVisits = maxThirdLongTermFollowUpVisits;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    @Override
+    public String toString() {
+        return site.getSiteId() + " - " + location;
     }
 }
 
