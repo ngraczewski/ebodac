@@ -8,6 +8,7 @@ import org.motechproject.commons.date.model.Time;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
+import org.motechproject.mds.annotations.NonEditable;
 
 @Entity(maxFetchDepth = 3)
 public class Screening {
@@ -34,6 +35,10 @@ public class Screening {
     @Field(required = true)
     @JsonSerialize(using = CustomTimeSerializer.class)
     private Time endTime;
+
+    @NonEditable(display = false)
+    @Field
+    private String owner;
 
     public ScreeningDto toDto() {
         ScreeningDto dto = new ScreeningDto();
@@ -102,5 +107,13 @@ public class Screening {
 
     public void setEndTime(Time endTime) {
         this.endTime = endTime;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }

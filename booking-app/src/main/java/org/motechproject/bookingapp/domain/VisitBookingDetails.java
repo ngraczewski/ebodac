@@ -6,6 +6,7 @@ import org.motechproject.ebodac.domain.Subject;
 import org.motechproject.ebodac.domain.Visit;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.NonEditable;
 
 @Entity(maxFetchDepth = 3)
 public class VisitBookingDetails {
@@ -40,6 +41,10 @@ public class VisitBookingDetails {
 
     @Field(required = true)
     private Subject subject;
+
+    @NonEditable(display = false)
+    @Field
+    private String owner;
 
     public VisitBookingDetails() {
     }
@@ -129,5 +134,13 @@ public class VisitBookingDetails {
 
     public void setSubject(Subject subject) {
         this.subject = subject;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }
