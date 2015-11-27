@@ -24,6 +24,11 @@ public final class BookingAppConstants {
     public static final String CLINIC_VISIT_SCHEDULE_TAB_PERMISSION = "clinicVisitBookingTab";
     public static final String ADVANCED_SETTINGS_TAB_PERMISSION = "bookingAdvancedSettings";
 
+    public static final String HAS_SCREENING_TAB_ROLE = "hasRole('" + SCREENING_TAB_PERMISSION + "')";
+    public static final String HAS_PRIME_VAC_TAB_ROLE = "hasRole('" + PRIME_VAC_TAB_PERMISSION + "')";
+    public static final String HAS_CLINIC_VISIT_SCHEDULE_TAB_ROLE = "hasRole('" + CLINIC_VISIT_SCHEDULE_TAB_PERMISSION + "')";
+    public static final String HAS_ADVANCED_SETTINGS_TAB_ROLE = "hasRole('" + ADVANCED_SETTINGS_TAB_PERMISSION + "')";
+
     public static final Map<String, String> SCREENING_FIELDS_MAP = new LinkedHashMap<String, String>() {
         {
             put("Booking Id",       "volunteer.id");
