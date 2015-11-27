@@ -2,18 +2,16 @@ package org.motechproject.bookingapp.web;
 
 
 import org.motechproject.bookingapp.constants.BookingAppConstants;
-import org.motechproject.bookingapp.domain.DateFilter;
 import org.motechproject.bookingapp.domain.Screening;
 import org.motechproject.bookingapp.domain.ScreeningDto;
 import org.motechproject.bookingapp.exception.LimitationExceededException;
 import org.motechproject.bookingapp.helper.DtoLookupHelper;
 import org.motechproject.bookingapp.service.ScreeningService;
 import org.motechproject.bookingapp.web.domain.BookingGridSettings;
-import org.motechproject.bookingapp.web.domain.StringResponse;
 import org.motechproject.ebodac.exception.EbodacLookupException;
 import org.motechproject.ebodac.service.LookupService;
-import org.motechproject.mds.dto.LookupDto;
 import org.motechproject.ebodac.web.domain.Records;
+import org.motechproject.mds.dto.LookupDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +34,6 @@ import java.util.List;
 public class ScreeningController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ScreeningController.class);
-
-    private DateFilter defaultDateFilter = DateFilter.TODAY;
 
     @Autowired
     private ScreeningService screeningService;
@@ -65,12 +61,6 @@ public class ScreeningController {
         } catch (LimitationExceededException e) {
             return e.getMessage();
         }
-    }
-
-    @RequestMapping(value = "/getDefaultDateFilter")
-    @ResponseBody
-    public StringResponse getDefaultDateFilter() {
-        return new StringResponse(defaultDateFilter.toString());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
