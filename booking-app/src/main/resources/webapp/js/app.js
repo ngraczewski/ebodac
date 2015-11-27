@@ -13,6 +13,18 @@
         async: false
     });
 
+    $.ajax({
+            url: '../booking-app/available/bookingTabs',
+            success:  function(data) {
+                bookingApp.constant('BOOKING_AVAILABLE_TABS', data);
+            },
+            async:    false
+        });
+
+    bookingApp.run(function ($rootScope, BOOKING_AVAILABLE_TABS) {
+            $rootScope.BOOKING_AVAILABLE_TABS = BOOKING_AVAILABLE_TABS;
+        });
+
     bookingApp.config(function ($routeProvider) {
         $routeProvider
             .when('/bookingApp/screening', {

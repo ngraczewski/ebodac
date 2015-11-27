@@ -19,6 +19,11 @@ public final class BookingAppConstants {
     public static final String SCREENING_NAME = "Screening";
     public static final String PRIME_VACCINATION_SCHEDULE_NAME = "Prime Vaccination Schedule";
 
+    public static final String SCREENING_TAB_PERMISSION = "screeningBookingTab";
+    public static final String PRIME_VAC_TAB_PERMISSION = "primeVaccinationBookingTab";
+    public static final String CLINIC_VISIT_SCHEDULE_TAB_PERMISSION = "clinicVisitBookingTab";
+    public static final String ADVANCED_SETTINGS_TAB_PERMISSION = "bookingAdvancedSettings";
+
     public static final Map<String, String> SCREENING_FIELDS_MAP = new LinkedHashMap<String, String>() {
         {
             put("Booking Id",       "volunteer.id");

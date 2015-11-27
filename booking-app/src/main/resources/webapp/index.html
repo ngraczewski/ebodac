@@ -6,17 +6,16 @@
             <li ng-show="active('#/bookingApp/screening')" ng-class="active('#/bookingApp/screening')">{{msg('bookingApp.screening')}}</li>
             <li ng-show="active('#/bookingApp/primeVaccination')" ng-class="active('#/bookingApp/primeVaccination')">{{msg('bookingApp.primeVaccination')}}</li>
             <li ng-show="active('#/bookingApp/clinicVisitSchedule')" ng-class="active('#/bookingApp/clinicVisitSchedule')">{{msg('bookingApp.clinicVisitSchedule')}}</li>
-            <li ng-show="active('#/bookingApp/reschedule')" ng-class="active('#/bookingApp/reschedule')">{{msg('bookingApp.reschedule')}}</li>
             <li ng-show="active('#/bookingApp/visitLimitation')" ng-class="active('#/bookingApp/visitLimitation')">{{msg('bookingApp.visitLimitation')}}</li>
         </ul>
     </div>
     <div class="header-footer">
         <ul id="content-tabs" class="nav nav-tabs">
-            <li ng-class="active('#/bookingApp/screening')"><a href="#/bookingApp/screening">{{msg('bookingApp.screening')}}</a></li>
-            <li ng-class="active('#/bookingApp/primeVaccination')"><a href="#/bookingApp/primeVaccination">{{msg('bookingApp.primeVaccination')}}</a></li>
-            <li ng-class="active('#/bookingApp/clinicVisitSchedule')"><a href="#/bookingApp/clinicVisitSchedule">{{msg('bookingApp.clinicVisitSchedule')}}</a></li>
-            <li ng-class="active('#/bookingApp/reschedule')"><a href="#/bookingApp/reschedule">{{msg('bookingApp.reschedule')}}</a></li>
-            <li ng-class="active('#/bookingApp/visitLimitation')"><a href="#/bookingApp/visitLimitation">{{msg('bookingApp.visitLimitation')}}</a></li>
+            <li ng-class="active('#/bookingApp/' + tab)" ng-repeat="tab in BOOKING_AVAILABLE_TABS">
+                <a href="#/bookingApp/{{tab}}">
+                    {{msg('bookingApp.' + tab)}}
+                </a>
+            </li>
         </ul>
     </div>
     <div class="ui-layout-content">
