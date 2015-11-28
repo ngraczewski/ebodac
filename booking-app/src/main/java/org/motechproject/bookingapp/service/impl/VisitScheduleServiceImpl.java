@@ -52,7 +52,7 @@ public class VisitScheduleServiceImpl implements VisitScheduleService {
 
             if (subject.getPrimerVaccinationDate() != null) {
                 primeVacDate = subject.getPrimerVaccinationDate();
-            } else {
+            } else if (details != null){
                 primeVacDate = details.getBookingActualDate();
             }
 

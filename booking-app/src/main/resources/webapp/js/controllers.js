@@ -530,10 +530,8 @@
                 .success(function(data) {
                     $scope.primeVac.date = data.primeVacDate;
                     $scope.dateRange = {};
-                    $timeout(function() {
-                        $scope.dateRange.min = data.earliestDate;
-                        $scope.dateRange.max = data.latestDate;
-                    });
+                    $scope.dateRange.min = data.earliestDate;
+                    $scope.dateRange.max = data.latestDate;
                 });
             }
         }
