@@ -13,7 +13,7 @@ import java.io.IOException;
 public class CustomDateDeserializer extends JsonDeserializer<LocalDate> {
 
     private static final DateTimeFormatter FORMATTER =
-            DateTimeFormat.forPattern("dd-MM-yyyy");
+            DateTimeFormat.forPattern("yyyy-MM-dd");
 
     @Override
     public LocalDate deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {

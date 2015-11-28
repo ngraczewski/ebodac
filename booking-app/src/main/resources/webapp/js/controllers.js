@@ -86,6 +86,17 @@
 
             return time;
         };
+        
+        $scope.parseDate = function(date, offset) {
+            var parts = date.split('-'), date;
+
+            if (offset) {
+                date = new Date(parts[0], parts[1] - 1, parseInt(parts[2]) + offset);
+            } else {
+                date = new Date(parts[0], parts[1] - 1, parts[2]);
+            }
+            return date;
+        };
 
         $scope.isValidEndTime = function(startTimeString, endTimeString) {
 
@@ -530,8 +541,8 @@
                 .success(function(data) {
                     $scope.primeVac.date = data.primeVacDate;
                     $scope.dateRange = {};
-                    $scope.dateRange.min = data.earliestDate;
-                    $scope.dateRange.max = data.latestDate;
+                    $scope.dateRange.min = $scope.parseDate(data.earliestDate);
+                    $scope.dateRange.max = $scope.parseDate(data.latestDate);
                 });
             }
         }

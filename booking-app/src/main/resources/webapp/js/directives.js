@@ -3,6 +3,20 @@
 
     var directives = angular.module('bookingApp.directives', []);
 
+    function calculateRange(parser, forDate, femaleChildBearingAge) {
+        var range = {};
+
+        if (femaleChildBearingAge == "Yes") {
+            range.min = parser(forDate, 14);
+        } else {
+            range.min = parser(forDate, 1);
+        }
+
+        range.max = parser(forDate, 28);
+
+        return range;
+    };
+
     directives.directive('set', function() {
         return {
             restrict: 'A',
@@ -27,7 +41,7 @@
         return {
             restrict: 'A',
             require: 'ngModel',
-            link: function(scope, element, attrs, ngModel) {
+            link: function(scope, element, attrs) {
                 scope.$watch("$parent." + attrs.ngModel, function () {
                     $("#screenings").trigger('reloadGrid');
                 });
@@ -35,88 +49,22 @@
         };
     });
 
-    directives.directive('bookingAppDatePicker', ['$timeout', function($timeout) {
-
-        function dateParser(date, offset) {
-            var parts = date.split('-'), date;
-            return new Date(parts[2], parts[1] - 1, parseInt(parts[0]) + offset);
-        }
-
+    directives.directive('rangeRefresher', function() {
         return {
             restrict: 'A',
             scope: {
                 forDate: '@'
             },
             require: 'ngModel',
-            link: function (scope, element, attr, ngModel) {
-                var isReadOnly = scope.$eval(attr.ngReadonly);
-                if(!isReadOnly) {
-                    angular.element(element).datepicker({
-                        changeYear: true,
-                        showButtonPanel: true,
-                        dateFormat: 'dd-mm-yy',
-                        minDate: dateParser(scope.forDate, 1),
-                        maxDate: dateParser(scope.forDate, 28),
-                        onSelect: function (dateTex) {
-                            $timeout(function() {
-                                ngModel.$setViewValue(dateTex);
-                            })
-                        },
-                        onChangeMonthYear: function (year, month, inst) {
-                            var curDate = $(this).datepicker("getDate");
-                            if (curDate === null) {
-                                return;
-                            }
-                            if (curDate.getFullYear() !== year || curDate.getMonth() !== month - 1) {
-                                curDate.setYear(year);
-                                curDate.setMonth(month - 1);
-                                $(this).datepicker("setDate", curDate);
-                            }
-                        },
-                        onClose: function (dateText, inst) {
-                            var viewValue = element.val();
-                            $timeout(function() {
-                                ngModel.$setViewValue(viewValue);
-                            })
-                        }
-                    });
-                }
-
-                scope.$watch("$parent.form.dto.femaleChildBearingAge", function(value) {
-                    var minDate,
-                        currentDate = element.datepicker('getDate');
-
-                    if (value === "Yes") {
-                        minDate = dateParser(scope.forDate, 14);
-                    } else {
-                        minDate = dateParser(scope.forDate, 1);
-                    }
-
-                    if (currentDate < minDate) {
-                        angular.element(element).datepicker("setDate", undefined);
-                        $timeout(function() {
-                            ngModel.$setViewValue(undefined);
-                        });
-                    }
-
-                    angular.element(element).datepicker('option', 'minDate', minDate);
+            link: function(scope, element, attrs) {
+                scope.$watch("$parent." + attrs.ngModel, function (value) {
+                    scope.$parent.form.range = calculateRange(scope.$parent.parseDate, scope.forDate, value);
                 });
             }
         };
-    }]);
+    });
 
-directives.directive('clinicVisitScheduleDatePicker', ['$timeout', function($timeout) {
-
-        function dateParser(date, offset) {
-            var parts = date.split('-'), date;
-
-            if (offset) {
-                date = new Date(parts[0], parts[1] - 1, parseInt(parts[2]) + offset);
-            } else {
-                date = new Date(parts[0], parts[1] - 1, parts[2]);
-            }
-            return date;
-        }
+    directives.directive('bookingAppDatePicker', ['$timeout', function($timeout) {
 
         return {
             restrict: 'A',
@@ -159,13 +107,13 @@ directives.directive('clinicVisitScheduleDatePicker', ['$timeout', function($tim
 
                 scope.$watch("$parent." + scope.min, function(value) {
                     if (value) {
-                        angular.element(element).datepicker('option', 'minDate', dateParser(value));
+                        angular.element(element).datepicker('option', 'minDate', value);
                     }
                 });
 
                 scope.$watch("$parent." + scope.max, function(value) {
                     if (value) {
-                        angular.element(element).datepicker('option', 'maxDate', dateParser(value));
+                        angular.element(element).datepicker('option', 'maxDate', value);
                     }
                 });
             }
@@ -366,6 +314,8 @@ directives.directive('clinicVisitScheduleDatePicker', ['$timeout', function($tim
                             scope.form.dto.clinicId = extraRowData.clinicId;
                             scope.form.dto.visitId = extraRowData.visitId;
                             scope.form.dto.participantGender = extraRowData.participantGender;
+                            scope.form.range = calculateRange(scope.parseDate, scope.form.dto.actualScreeningDate,
+                                scope.form.dto.femaleChildBearingAge);
                             scope.reloadSelects();
                             $('#primeVaccinationScheduleModal').modal('show');
                         }
