@@ -513,7 +513,7 @@
         };
     });
 
-    controllers.controller('BookingAppClinicVisitScheduleCtrl', function ($scope, $http, $filter) {
+    controllers.controller('BookingAppClinicVisitScheduleCtrl', function ($scope, $http, $filter, $timeout) {
         $scope.screeningVisits = [];
         $scope.selectedSubject = {};
         $scope.primeVac = {};
@@ -528,7 +528,12 @@
             if ($scope.checkSubject()) {
                 $http.get('../booking-app/schedule/getPrimeVacDate/' + $scope.selectedSubject.subjectId)
                 .success(function(data) {
-                    $scope.primeVac.date = data;
+                    $scope.primeVac.date = data.primeVacDate;
+                    $scope.dateRange = {};
+                    $timeout(function() {
+                        $scope.dateRange.min = data.earliestDate;
+                        $scope.dateRange.max = data.latestDate;
+                    });
                 });
             }
         }

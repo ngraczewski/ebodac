@@ -44,18 +44,8 @@ public class VisitScheduleController {
 
     @RequestMapping(value = "/getPrimeVacDate/{subjectId}", method = RequestMethod.GET)
     @ResponseBody
-    public String getPrimeVacDate(@PathVariable String subjectId) {
-        if (StringUtils.isBlank(subjectId)) {
-            return "";
-        }
-
-        LocalDate date = visitScheduleService.getPrimeVaccinationDate(subjectId);
-
-        if (date != null) {
-            return date.toString(BookingAppConstants.SIMPLE_DATE_FORMAT);
-        } else {
-            return "";
-        }
+    public Map<String, String> getPrimeVacDate(@PathVariable String subjectId) {
+        return visitScheduleService.getPrimeVaccinationDateAndDateRange(subjectId);
     }
 
     @RequestMapping(value = "/getPlannedDates/{subjectId}/{plannedDate}", method = RequestMethod.GET)

@@ -105,6 +105,73 @@
         };
     }]);
 
+directives.directive('clinicVisitScheduleDatePicker', ['$timeout', function($timeout) {
+
+        function dateParser(date, offset) {
+            var parts = date.split('-'), date;
+
+            if (offset) {
+                date = new Date(parts[0], parts[1] - 1, parseInt(parts[2]) + offset);
+            } else {
+                date = new Date(parts[0], parts[1] - 1, parts[2]);
+            }
+            return date;
+        }
+
+        return {
+            restrict: 'A',
+            scope: {
+                min: '@',
+                max: '@'
+            },
+            require: 'ngModel',
+            link: function (scope, element, attr, ngModel) {
+                var isReadOnly = scope.$eval(attr.ngReadonly);
+                if(!isReadOnly) {
+                    angular.element(element).datepicker({
+                        changeYear: true,
+                        showButtonPanel: true,
+                        dateFormat: 'yy-mm-dd',
+                        onSelect: function (dateTex) {
+                            $timeout(function() {
+                                ngModel.$setViewValue(dateTex);
+                            })
+                        },
+                        onChangeMonthYear: function (year, month, inst) {
+                            var curDate = $(this).datepicker("getDate");
+                            if (curDate === null) {
+                                return;
+                            }
+                            if (curDate.getFullYear() !== year || curDate.getMonth() !== month - 1) {
+                                curDate.setYear(year);
+                                curDate.setMonth(month - 1);
+                                $(this).datepicker("setDate", curDate);
+                            }
+                        },
+                        onClose: function (dateText, inst) {
+                            var viewValue = element.val();
+                            $timeout(function() {
+                                ngModel.$setViewValue(viewValue);
+                            })
+                        }
+                    });
+                }
+
+                scope.$watch("$parent." + scope.min, function(value) {
+                    if (value) {
+                        angular.element(element).datepicker('option', 'minDate', dateParser(value));
+                    }
+                });
+
+                scope.$watch("$parent." + scope.max, function(value) {
+                    if (value) {
+                        angular.element(element).datepicker('option', 'maxDate', dateParser(value));
+                    }
+                });
+            }
+        };
+    }]);
+
     directives.directive('screeningGrid', function ($compile) {
 
         function createButton(id) {
