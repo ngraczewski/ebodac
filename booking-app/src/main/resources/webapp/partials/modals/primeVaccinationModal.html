@@ -22,7 +22,7 @@
                     </div>
                     <div class="booking-app input-group">
                         <span class="left input-group-addon">{{msg('bookingApp.date')}}</span>
-                        <input type="text" class="form-control" booking-app-date-picker for-date="{{form.dto.actualScreeningDate}}" placeholder="{{msg('bookingApp.datePlaceholder')}}" ng-model="form.dto.date">
+                        <input type="text" class="form-control" id="datepicker" readonly='true' booking-app-date-picker for-date="{{form.dto.actualScreeningDate}}" placeholder="{{msg('bookingApp.datePlaceholder')}}" ng-model="form.dto.date">
                         <span class="input-group-addon validator" ng-class="{'alert-danger': form.dto.date === '', 'alert-success': form.dto.date}"><i class="fa fa-fw fa-check"></i></span>
                     </div>
                     <div class="booking-app input-group prime-vaccination-schedule-modal">

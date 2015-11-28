@@ -81,6 +81,26 @@
                         }
                     });
                 }
+
+                scope.$watch("$parent.form.dto.femaleChildBearingAge", function(value) {
+                    var minDate,
+                        currentDate = element.datepicker('getDate');
+
+                    if (value === "Yes") {
+                        minDate = dateParser(scope.forDate, 14);
+                    } else {
+                        minDate = dateParser(scope.forDate, 1);
+                    }
+
+                    if (currentDate < minDate) {
+                        angular.element(element).datepicker("setDate", undefined);
+                        $timeout(function() {
+                            ngModel.$setViewValue(undefined);
+                        });
+                    }
+
+                    angular.element(element).datepicker('option', 'minDate', minDate);
+                });
             }
         };
     }]);

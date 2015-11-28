@@ -2,6 +2,7 @@ package org.motechproject.bookingapp.service.impl;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.joda.time.LocalDate;
 import org.motechproject.bookingapp.domain.Clinic;
 import org.motechproject.bookingapp.domain.PrimeVaccinationScheduleDto;
 import org.motechproject.bookingapp.domain.VisitBookingDetails;
@@ -83,6 +84,8 @@ public class PrimeVaccinationScheduleServiceImpl implements PrimeVaccinationSche
         if (!ignoreLimitation) {
             checkNumberOfPatients(dto);
         }
+
+        validateDate(dto);
 
         VisitBookingDetails visitBookingDetails = visitBookingDetailsDataService.findById(dto.getVisitBookingDetailsId());
 
@@ -192,6 +195,19 @@ public class PrimeVaccinationScheduleServiceImpl implements PrimeVaccinationSche
             if (patients >= numberOfRooms) {
                 throw new LimitationExceededException("Too many Patients at the same time");
             }
+        }
+    }
+
+    private void validateDate(PrimeVaccinationScheduleDto dto) {
+        LocalDate actualScreeningDate = visitDataService
+                .findVisitBySubjectIdAndType(dto.getParticipantId(), VisitType.SCREENING).getDate();
+
+        LocalDate earliestDate = dto.getFemaleChildBearingAge() ? actualScreeningDate.plusDays(14) : actualScreeningDate.plusDays(1);
+        LocalDate latestDate = actualScreeningDate.plusDays(28);
+
+        if (dto.getDate().isBefore(earliestDate) || dto.getDate().isAfter(latestDate)) {
+            throw new IllegalArgumentException(String.format("The date should be between %s and %s but is %s",
+                    earliestDate, latestDate, dto.getDate()));
         }
     }
 }

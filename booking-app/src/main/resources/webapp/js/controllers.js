@@ -477,7 +477,7 @@
                 && $scope.form.dto.startTime
                 && $scope.form.dto.clinicId
                 && $scope.isValidEndTime($scope.form.dto.startTime, $scope.form.dto.endTime) === true
-                && $scope.form.dto.participantGender == 'Female' ? $scope.form.dto.femaleChildBearingAge : true;
+                && ($scope.form.dto.participantGender == 'Female' ? $scope.form.dto.femaleChildBearingAge !== undefined : true);
         };
 
         $scope.exportInstance = function() {
